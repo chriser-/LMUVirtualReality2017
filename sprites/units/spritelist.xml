@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spritelist>
+  <sprite name="DuckBlue">
+    <item key="right" frame="1">blue_right_1</item>
+    <item key="right" frame="2">blue_right_2</item>
+    <item key="right" frame="3">blue_right_3</item>
+    <item key="left" frame="1">blue_left_1</item>
+    <item key="left" frame="2">blue_left_2</item>
+    <item key="left" frame="3">blue_left_3</item>
+    <item key="right_up" frame="1">blue_right_up_1</item>
+    <item key="right_up" frame="2">blue_right_up_2</item>
+    <item key="right_up" frame="3">blue_right_up_3</item>
+    <item key="left_up" frame="1">blue_left_up_1</item>
+    <item key="left_up" frame="2">blue_left_up_2</item>
+    <item key="left_up" frame="3">blue_left_up_3</item>
+    <item key="right_down" frame="1">blue_right_down_1</item>
+    <item key="right_down" frame="2">blue_right_down_2</item>
+    <item key="right_down" frame="3">blue_right_down_3</item>
+    <item key="left_down" frame="1">blue_left_down_1</item>
+    <item key="left_down" frame="2">blue_left_down_2</item>
+    <item key="left_down" frame="3">blue_left_down_3</item>
+    <item key="up" frame="1">blue_up_1</item>
+    <item key="up" frame="2">blue_up_2</item>
+    <item key="up" frame="3">blue_up_3</item>
+    <item key="down" frame="1">blue_down_1</item>
+    <item key="down" frame="2">blue_down_2</item>
+    <item key="down" frame="3">blue_down_3</item>
+    <item key="dead" frame="1">blue_dead</item>
+    <item key="hit" frame="1">blue_hit</item>
+  </sprite>
+</spritelist>

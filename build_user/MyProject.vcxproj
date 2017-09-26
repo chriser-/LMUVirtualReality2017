@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{7F92FEA0-B506-313B-BCE1-C63D1F0C1650}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>x64</Platform>
+    <ProjectName>MyProject</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\..\exe\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MyProject.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MyProject</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CustomBuildBeforeTargets>Run</CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\includes;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include\OpenSG;$(SolutionDir)\..\..\libraries\install\vs11_64\boost_1_57_0\include\boost-1_57;$(SolutionDir)\..\..\libraries\install\vs11_64\freeglut\include;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\include;$(SolutionDir)\..\..\libraries\install\vs11_64\zlib\include;$(SolutionDir)\..\..\libraries\install\vs11_64\libpng\include\libpng14;$(SolutionDir)\..\..\libraries\install\vs11_64\vrpn\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_OSG_HAVE_CONFIGURED_H_;OSG_WITH_GLUT;OSG_WITH_PNG;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;ENABLE_CSM_SUPPORT;ENABLE_VRPN_SUPPORT;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_OSG_HAVE_CONFIGURED_H_;OSG_WITH_GLUT;OSG_WITH_PNG;OSG_WITH_GIF;OSG_WITH_TIF;OSG_WITH_JPG;ENABLE_CSM_SUPPORT;ENABLE_VRPN_SUPPORT;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\includes;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include\OpenSG;$(SolutionDir)\..\..\libraries\install\vs11_64\boost_1_57_0\include\boost-1_57;$(SolutionDir)\..\..\libraries\install\vs11_64\freeglut\include;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\include;$(SolutionDir)\..\..\libraries\install\vs11_64\vrpn\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>$(SolutionDir)\..\includes;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\include\OpenSG;$(SolutionDir)\..\..\libraries\install\vs11_64\boost_1_57_0\include\boost-1_57;$(SolutionDir)\..\..\libraries\install\vs11_64\freeglut\include;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\include;$(SolutionDir)\..\..\libraries\install\vs11_64\vrpn\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions>%(AdditionalOptions)  /machine:x64</AdditionalOptions>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\libpng\lib\png14.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\zlib\lib\zlib.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\boost_1_57_0\lib\libboost_filesystem-vc110-mt-1_57.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\boost_1_57_0\lib\libboost_system-vc110-mt-1_57.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGBase.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGSystem.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGWindow.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGWindowWIN32.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGWindowGLUT.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGDrawable.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGState.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGGroup.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGUtil.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGText.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGFileIO.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGDynamics.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\opensg\lib\rel\OSGImageFileIO.lib;..\..\libraries\install\vs11_64\freeglut\lib\freeglut.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\invrs\lib\CAVESceneManager.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\invrs\lib\irrXML.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\vrpn\lib\vrpn.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\vrpn\lib\quat.lib;glu32.lib;opengl32.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGDrawable.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGState.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGSystem.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGBase.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGGroup.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGWindow.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGWindowWIN32.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGCluster.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGUtil.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\opensg\lib\rel\OSGText.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\boost_1_57_0\lib\libboost_filesystem-vc110-mt-1_57.lib;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\..\..\boost_1_57_0\lib\libboost_system-vc110-mt-1_57.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImportLibrary>$(SolutionDir)/../exe/Release/MyProject.lib</ImportLibrary>
+      <ProgramDataBaseFile>$(SolutionDir)/../exe/Release/MyProject.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>SETLOCAL EnableExtensions
+set EXE=csmrenderserver.exe
+FOR /F %%x IN ('tasklist /NH /FI "IMAGENAME eq %EXE%"') DO IF %%x == %EXE% goto FOUND
+echo starting csmrenderserver
+$(ProjectDir)..\start_csm.bat
+goto FIN
+:FOUND
+echo csmrenderserver is already running.
+:FIN</Command>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <!--<ItemGroup>
+    <CustomBuild Include="$(SolutionDir)\..\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule $(SolutionDir)/../CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-H$(SolutionDir)/.." "-B$(SolutionDir)/../build_user" -check-stamp-file "$(SolutionDir)/../build_user/CMakeFiles/generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)/../CMakeLists.txt;$(SolutionDir)\..\CMakeLists.txt;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeSystem.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeSystem.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCCompiler.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MIPSpro-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCXXCompiler.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\WindowsPaths.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeRCCompiler.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCCompiler.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\Compiler\MSVC-CXX-FeatureTests.cmake;$(SolutionDir)\..\build_user\CMakeFiles\feature_tests.cxx;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeCXXCompiler.cmake.in;$(SolutionDir)\..\build_user\CMakeFiles\3.8.2\CMakeCXXCompiler.cmake;$(SolutionDir)\..\cmake\Modules\AddProject.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\CMakeParseArguments.cmake;$(SolutionDir)\..\config\mono.csm;$(SolutionDir)\..\cmake\Modules\FindOpenSG.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindBoost.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindGLUT.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageMessage.cmake;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\CAVESceneManagerConfigVersion.cmake;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\CAVESceneManagerConfig.cmake;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\CAVESceneManagerTargets.cmake;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\CAVESceneManagerTargets-debug.cmake;$(SolutionDir)\..\..\libraries\install\vs11_64\invrs\cmake\CAVESceneManagerTargets-release.cmake;$(SolutionDir)\..\cmake\Modules\FindVRPN.cmake;$(SolutionDir)\..\cmake\Modules\Findquatlib.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindX11.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindOpenGL.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-3.8\Modules\FindPackageMessage.cmake;$(SolutionDir)\..\cmake\Modules\template_vs10-11.vcxproj.user.in;$(SolutionDir)\..\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\..\build_user\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>-->
+  <ItemGroup>
+    <ClInclude Include="..\sources\Component.h" />
+    <ClInclude Include="..\sources\GameObject.h" />
+    <ClInclude Include="..\sources\bird.h" />
+    <ClInclude Include="..\sources\Game.h" />
+    <ClInclude Include="..\sources\Sprite.h" />
+    <ClInclude Include="..\sources\SpriteAtlas.h" />
+    <ClInclude Include="..\sources\Time.h" />
+    <ClInclude Include="$(SolutionDir)\..\config\mono.csm" />
+    <ClCompile Include="..\sources\Component.cpp" />
+    <ClCompile Include="..\sources\GameObject.cpp" />
+    <ClCompile Include="..\sources\bird.cpp" />
+    <ClCompile Include="..\sources\Game.cpp" />
+    <ClCompile Include="..\sources\Sprite.cpp" />
+    <ClCompile Include="..\sources\SpriteAtlas.cpp" />
+    <ClCompile Include="..\sources\Time.cpp" />
+    <ClCompile Include="$(SolutionDir)\..\sources\opensg_vrpn.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\sprites\units\spritelist.xml" />
+    <Xml Include="..\sprites\units\spritesheet.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\sprites\units\spritesheet.png" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

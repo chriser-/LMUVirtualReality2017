@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\sources\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)\..\sources\opensg_vrpn.cpp" />
+    <ClCompile Include="..\sources\bird.cpp">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Time.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\GameObject.cpp">
+      <Filter>Source Files\Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\SpriteAtlas.cpp">
+      <Filter>Source Files\Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Sprite.cpp">
+      <Filter>Source Files\Definitions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sources\Component.cpp">
+      <Filter>Source Files\Definitions</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sources\Game.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)\..\config\mono.csm" />
+    <ClInclude Include="..\sources\bird.h">
+      <Filter>Source Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Time.h">
+      <Filter>Source Files\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\GameObject.h">
+      <Filter>Source Files\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\SpriteAtlas.h">
+      <Filter>Source Files\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Sprite.h">
+      <Filter>Source Files\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sources\Component.h">
+      <Filter>Source Files\Definitions</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{818CCD7D-D543-362B-9C74-621F107FEAF4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration Files">
+      <UniqueIdentifier>{E784BE01-0CCA-348A-9836-697EC9797C6E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model Files">
+      <UniqueIdentifier>{83df0639-6804-4572-b961-d7a174129aa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Definitions">
+      <UniqueIdentifier>{6eb92f2e-a96b-4d05-a8b5-849ae9134a38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{381c225d-08a1-4e60-a0a2-74b4119773f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helper">
+      <UniqueIdentifier>{58480cd8-e8b6-4aca-b3c7-1dc72dfc3175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sprites">
+      <UniqueIdentifier>{8a6fcead-1b0c-4149-aab2-e7ad7d88e1df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sprites\units">
+      <UniqueIdentifier>{27b98809-530b-4be3-9e42-ec7c70e66c1d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="..\sprites\units\spritelist.xml">
+      <Filter>sprites\units</Filter>
+    </Xml>
+    <Xml Include="..\sprites\units\spritesheet.xml">
+      <Filter>sprites\units</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\sprites\units\spritesheet.png">
+      <Filter>sprites\units</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
