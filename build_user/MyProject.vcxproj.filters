@@ -73,6 +73,9 @@
     <Filter Include="sprites\units">
       <UniqueIdentifier>{27b98809-530b-4be3-9e42-ec7c70e66c1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sprites\objects">
+      <UniqueIdentifier>{b79fd7b9-7651-44e2-8c03-97164cad0c4e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\sprites\units\spritelist.xml">
@@ -81,10 +84,19 @@
     <Xml Include="..\sprites\units\spritesheet.xml">
       <Filter>sprites\units</Filter>
     </Xml>
+    <Xml Include="..\sprites\objects\spritelist.xml">
+      <Filter>sprites\objects</Filter>
+    </Xml>
+    <Xml Include="..\sprites\objects\spritesheet.xml">
+      <Filter>sprites\objects</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\sprites\units\spritesheet.png">
       <Filter>sprites\units</Filter>
+    </Image>
+    <Image Include="..\sprites\objects\spritesheet.png">
+      <Filter>sprites\objects</Filter>
     </Image>
   </ItemGroup>
 </Project>

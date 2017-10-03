@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE interactionCursorRepresentation SYSTEM "http://dtd.inVRs.org/interactionCursorRepresentation_v1.0a4.dtd">
+<interactionCursorRepresentation version="1.0a4">
+	<idleModel>
+		<representation>
+			<file type="VRML97" name="hand.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="0" y="1" z="1" angleDeg="0"/>
+				<scale x="0.5" y="0.5" z="0.5"/>
+			</transformation>
+		</representation>
+	</idleModel>
+	<manipulationModel>
+		<representation>
+			<file type="VRML97" name="hand_closed.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="0" y="1" z="1" angleDeg="0"/>
+				<scale x="0.5" y="0.5" z="0.5"/>
+			</transformation>
+		</representation>
+	</manipulationModel>
+</interactionCursorRepresentation>

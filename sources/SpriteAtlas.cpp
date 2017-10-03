@@ -113,7 +113,9 @@ std::vector<SubImageInfo> SpriteAtlas::LoadSubImageInfo(std::string name)
 
 std::unordered_map<std::string, std::unordered_map<std::string, std::vector<std::string>>> SpriteAtlas::LoadSpriteList(std::string name)
 {
-	IrrXMLReader* xml = createIrrXMLReader(std::string("sprites/" + name + "/spritelist.xml").c_str());
+	std::string fileName = "sprites/" + name + "/spritelist.xml";
+	std::cout << "Loading SpriteList from " << fileName << std::endl;
+	IrrXMLReader* xml = createIrrXMLReader(fileName.c_str());
 	
 	std::unordered_map<std::string, std::unordered_map<std::string, std::vector<std::string>>> spriteListMap;
 	std::string currentSprite;

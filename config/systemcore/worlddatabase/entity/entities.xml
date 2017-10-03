@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE entityTypes SYSTEM "http://dtd.inVRs.org/entityTypes_v1.0a4.dtd">
+<entityTypes version="1.0a4">
+	<entityType typeId="1" name="Box01" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="box01.wrl"/>
+			<transformation>
+				<scale x="0.9" y="0.9" z="0.9"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="2" name="Box02" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="box02.wrl"/>
+			<transformation>
+				<scale x="0.9" y="0.9" z="0.9"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="3" name="Box03" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="box03.wrl"/>
+			<transformation>
+				<scale x="0.9" y="0.9" z="0.9"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="4" name="Barrel" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="Barrel1.wrl"/>
+		</representation>
+	</entityType>
+	<entityType typeId="5" name="Tree01" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="genTree01c.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.35" y="0.35" z="0.35"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="41" name="SimpleSphere" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="stone_ball.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.5" y="0.5" z="0.5"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="61" name="Bench" fixed="0">
+		<representation copy="false">
+			<file type="VRML" name="bench.wrl"/>
+			<transformation>
+				<scale x="0.5" y="0.5" z="0.5"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="63" name="FachwerkHaus01" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="fw43_lowpoly_n1.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.34" y="0.34" z="0.34"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="64" name="FachwerkHaus02" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="fachwerk12_LOWPOLY_TS.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.34" y="0.34" z="0.34"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="65" name="FachwerkHaus03" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="fachwerk33T.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.35" y="0.35" z="0.35"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="66" name="Brunnen" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="brunnen4T.wrl"/>
+		</representation>
+	</entityType>
+	<entityType typeId="67" name="Chapel" fixed="1">
+		<representation copy="false">
+			<file type="VRML" name="chapel.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="0.35" y="0.35" z="0.35"/>
+			</transformation>
+		</representation>
+	</entityType>
+	<entityType typeId="68" name="Windmill" fixed="1">
+		<representation copy="true">
+			<file type="VRML" name="windmill.wrl"/>
+			<transformation>
+				<translation x="0" y="0" z="0"/>
+				<rotation x="1" y="0" z="0" angleDeg="0"/>
+				<scale x="1.4" y="1.4" z="1.4"/>
+			</transformation>
+		</representation>
+	</entityType>
+</entityTypes>

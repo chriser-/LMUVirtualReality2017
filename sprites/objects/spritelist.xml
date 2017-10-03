@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<spritelist>
+  <sprite name="Tree">
+    <item key="tree" frame="1">tree</item>
+  </sprite>
+	<sprite name="Ground">
+		<item key="ground" frame="1">ground</item>
+	</sprite>
+</spritelist>

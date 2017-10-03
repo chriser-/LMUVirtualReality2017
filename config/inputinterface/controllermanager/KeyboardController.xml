@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE controllerManager SYSTEM "http://dtd.inVRs.org/controllerManager_v1.0a4.dtd">
+<controllerManager version="1.0a4">
+	<controller buttons="11" axes="0" sensors="0">
+		<device type="GlutCharKeyboardDevice">
+			<button deviceIndex="32"  controllerIndex="0" />  <!-- space -->
+			<button deviceIndex="55"  controllerIndex="1" />  <!-- keypad 7 -->
+			<button deviceIndex="13"  controllerIndex="2" />  <!-- enter -->
+			<button deviceIndex="119" controllerIndex="3" />  <!-- W -->
+			<button deviceIndex="115" controllerIndex="4" />  <!-- S -->
+			<button deviceIndex="97"  controllerIndex="5" />  <!-- A -->
+			<button deviceIndex="100" controllerIndex="6" />  <!-- D -->
+			<button deviceIndex="56"  controllerIndex="7" />  <!-- keypad 8 -->
+			<button deviceIndex="53"  controllerIndex="8" />  <!-- keypad 5 -->
+			<button deviceIndex="52"  controllerIndex="9" />  <!-- keypad 4 -->
+			<button deviceIndex="54"  controllerIndex="10"/>  <!-- keypad 6 -->
+		</device>
+	</controller>
+</controllerManager>

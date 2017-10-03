@@ -39,9 +39,9 @@ const Vec3f Bird::START_VELOCITIES[START_VELOCITY_COUNT] = {
 };
 const string Bird::VELOCITY_TO_SPRITE[3][3] = {
 	//-1			0			1
-	{ "left_down",	"left",	"left_up"},	// -1
+	{ "left",	"left",	"left_up"},	// -1
 	{ "left",		"",		"right"},		// 0
-	{ "right_down",	"right","right_up"}		// 1
+	{ "right",	"right","right_up"}		// 1
 };
 
 Bird::Bird(std::string name, std::string spriteName) : GameObject(name)
@@ -50,6 +50,7 @@ Bird::Bird(std::string name, std::string spriteName) : GameObject(name)
 	m_direction = START_VELOCITIES[rand() % START_VELOCITY_COUNT];
 	m_speed = 1;
 	m_BirdSprite = new Sprite(GetTransform().node(), spriteName, "units");
+	m_BirdSprite->SetTimePerFrame(0.05);
 	AddComponent(m_BirdSprite);
 }
 
@@ -88,8 +89,7 @@ void Bird::Update()
 		m_BirdSprite->UpdateCurrentSprite(newSprite);
 
 		// translate into velocity direction with speed
-		const Vec3f currentTranslation = m_Transform->getTranslation();
-		m_Transform->setTranslation(currentTranslation + (m_direction * m_speed * Time::DeltaTime));
+		Translate(m_direction * m_speed * Time::DeltaTime);
 		std::cout << "Position is (" << m_Transform->getTranslation().x() << "," << m_Transform->getTranslation().y() << ")" << std::endl;
 	}
 }

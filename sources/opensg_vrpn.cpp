@@ -21,6 +21,10 @@
 #include <OSGCSM/OSGCAVEConfig.h>
 #include <OSGCSM/appctrl.h>
 
+#include <inVRs/SystemCore/UserDatabase/UserDatabase.h>
+#include <inVRs/SystemCore/SystemCore.h>
+#include <inVRs/SystemCore/Configuration.h>
+
 #include <vrpn_Tracker.h>
 #include <vrpn_Button.h>
 #include <vrpn_Analog.h>
@@ -48,16 +52,6 @@ void cleanup()
 
 void print_tracker();
 
-NodeTransitPtr buildScene()
-{
-	// you will see a donut at the floor, slightly skewed, depending on head_position
-	NodeRecPtr rootTrans = Node::create();
-	ComponentTransformRecPtr rootComponentTransform = ComponentTransform::create();
-	rootTrans->setCore(rootComponentTransform);
-	rootTrans->addChild(makeTorus(10.f, 50.f, 32.f, 64.f));
-	return NodeTransitPtr(rootTrans);
-}
-
 template<typename T>
 T scale_tracker2cm(const T& value)
 {
@@ -65,8 +59,8 @@ T scale_tracker2cm(const T& value)
 	return value * scale;
 }
 
-auto head_orientation = Quaternion(Vec3f(0.f, 1.f, 0.f), 3.141f);
-auto head_position = Vec3f(0.f, 170.f, 200.f);	// a 1.7m Person 2m in front of the scene
+Quaternion head_orientation = Quaternion(Vec3f(0.f, 1.f, 0.f), 3.141f);
+Vec3f head_position = Vec3f(0.f, 170.f, 200.f);	// a 1.7m Person 2m in front of the scene
 
 void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
@@ -74,8 +68,8 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 	head_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
 }
 
-auto wand_orientation = Quaternion();
-auto wand_position = Vec3f();
+Quaternion wand_orientation = Quaternion(Vec3f(0,0,0), 0);
+Vec3f wand_position = Vec3f(0.f, 150.f, 200.f); // wand at 1.5m, 2m in fron of the scene
 void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
 	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
@@ -127,8 +121,11 @@ void check_tracker()
 
 void print_tracker()
 {
-	std::cout << "Head position: " << head_position << " orientation: " << head_orientation << '\n';
-	std::cout << "Wand position: " << wand_position << " orientation: " << wand_orientation << '\n';
+	Vec3f head_orientation_euler, wand_orientation_euler;
+	head_orientation.getEulerAngleDeg(head_orientation_euler);
+	wand_orientation.getEulerAngleDeg(wand_orientation_euler);
+	std::cout << "Head position: " << head_position << " orientation: " << head_orientation_euler << '\n';
+	std::cout << "Wand position: " << wand_position << " orientation: " << wand_orientation_euler << '\n';
 	std::cout << "Analog: " << analog_values << '\n';
 }
 
@@ -167,15 +164,23 @@ void mouse(int button, int state, int x, int y)
 	std::cout << "speed: " << speed << std::endl;
 }
 
+GeoPnt3fPropertyRefPtr isectPoints;
+
 void keyboard(unsigned char k, int x, int y)
 {
 	Real32 ed;
+	Vec3f wandRotation;
 	switch(k)
 	{
 		case 'q':
 		case 27: 
 			cleanup();
 			//exit(EXIT_SUCCESS);
+			break;
+		case 'w':
+			wand_orientation.getEulerAngleDeg(wandRotation);
+			wand_orientation.setValueAsAxisDeg(Vec3f(0, 1, 0), wandRotation.y() + 1);
+			print_tracker();
 			break;
 		case 'e':
 			ed = mgr->getEyeSeparation() * .9f;
@@ -221,9 +226,15 @@ void keyboard(unsigned char k, int x, int y)
 		{
 			Line l;
 
-			// TODO: set line which maches wand orientation
+			// TODO: set line which matches wand orientation
+			// point 1 is the position of the wand
+			// point 2 is the position+direction of the wand
+			Vec3f point2;
+			wand_orientation.multVec(Vec3f(0, 0, 1), point2);
+			point2 += wand_position;
+			l.setValue(wand_position, point2);
 
-			std::cerr << "From " << l.getPosition()
+			std::cout << "From " << l.getPosition()
 				<< ", dir " << l.getDirection() << std::endl;
 
 			IntersectActionRefPtr act = IntersectAction::create();
@@ -231,15 +242,16 @@ void keyboard(unsigned char k, int x, int y)
 			act->setLine(l);
 			act->apply(game->GetRootNode().get());
 
-			GeoPnt3fPropertyRefPtr isectPoints;
 			isectPoints->setValue(l.getPosition(), 0);
 			isectPoints->setValue(l.getPosition() + l.getDirection(), 1);
+
 
 			// did we hit something?
 			if (act->didHit())
 			{
+				std::cout << "something was hit" << std::endl;
 				// yes!! print and highlight it
-				std::cerr << " object " << act->getHitObject()
+				std::cout << " object " << act->getHitObject()
 					<< " tri " << act->getHitTriangle()
 					<< " at " << act->getHitPoint();
 
@@ -277,6 +289,7 @@ void keyboard(unsigned char k, int x, int y)
 			}
 			else
 			{
+				std::cout << "nothing was hit" << std::endl;
 				// no, get rid of the triangle and highlight.
 				isectPoints->setValue(Pnt3f(0, 0, 0), 2);
 				isectPoints->setValue(Pnt3f(0, 0, 0), 3);
@@ -285,12 +298,13 @@ void keyboard(unsigned char k, int x, int y)
 			}
 
 			// free the action
-			act = NULL;
+			act = nullptr;
 
-			std::cerr << std::endl;
+			std::cout << std::endl;
 
 			glutPostRedisplay();
 		}
+		break;
 		default:
 			std::cout << "Key '" << k << "' ignored\n";
 	}
@@ -396,6 +410,42 @@ int main(int argc, char **argv)
 		InitTracker(cfg);
 
 		MultiDisplayWindowRefPtr mwin = createAppWindow(cfg, cfg.getBroadcastaddress());
+
+		// very first step: load the configuration of the file structures, basically
+		// paths are set. The Configuration always has to be loaded first since each
+		// module uses the paths set in the configuration-file
+		if (!Configuration::loadConfig("final/config/general.xml")) {
+			printf("Error: could not load config-file!\n");
+		}
+		// register callbacks
+		//InputInterface::registerModuleInitCallback(initInputInterface);
+		//SystemCore::registerModuleInitCallback(initModules);
+		//SystemCore::registerCoreComponentInitCallback(initCoreComponents);
+		std::string systemCoreConfigFile = Configuration::getString(
+			"SystemCore.systemCoreConfiguration");
+		std::string outputInterfaceConfigFile = Configuration::getString(
+			"Interfaces.outputInterfaceConfiguration");
+		// in addition to the SystemCore config file, modules and interfaces config
+		// files have to be loaded.
+		std::string modulesConfigFile = Configuration::getString(
+			"Modules.modulesConfiguration");
+		std::string inputInterfaceConfigFile = Configuration::getString(
+			"Interfaces.inputInterfaceConfiguration");
+
+		if (SystemCore::configure(systemCoreConfigFile, outputInterfaceConfigFile, inputInterfaceConfigFile,
+			modulesConfigFile)) {
+			printf("Error: failed to setup SystemCore!\n");
+			printf("Please check if the Plugins-path is correctly set to the inVRs-lib directory in the ");
+			printf("'final/config/general.xml' config file, e.g.:\n");
+			printf("<path name=\"Plugins\" path=\"/home/guest/inVRs/lib\"/>\n");
+		}
+
+		isectPoints = OSG::GeoPnt3fProperty::create();
+		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
+		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
+		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
+		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
+		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
 
 		if (!game) {
 			game = new Game();

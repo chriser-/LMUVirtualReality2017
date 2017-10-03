@@ -7,8 +7,9 @@
 #include <OSGSimpleGeometry.h>
 #include "Time.h"
 
-// key -> sprite names for each frame
-Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas)
+OSG_USING_NAMESPACE
+
+Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas, int sortKey)
 {
 	m_Name = name;
 	m_SpriteAtlas = Game::Instance()->GetSpriteAtlas(spriteAtlas);
@@ -26,28 +27,30 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas)
 	{
 		for (size_t i = 0; i < sprite.second.size(); i++)
 		{
-			std::string spriteName = sprite.second[i];
+			const std::string spriteName = sprite.second[i];
 			std::cout << "Making Geo for sprite " << spriteName << " at switcherIndex " << spriteSwitcherIndex << std::endl;
 			m_SpriteIdToIndexMap[spriteName] = spriteSwitcherIndex++;
-			ImageRecPtr image = m_SpriteAtlas->GetImage(spriteName);
+			const ImageRecPtr image = m_SpriteAtlas->GetImage(spriteName);
 			SimpleTexturedMaterialRecPtr material = SimpleTexturedMaterial::create();
 			material->setImage(image);
-			GeometryRecPtr spriteGeo = makePlaneGeo(image->getWidth(), image->getHeight(), 1, 1);
+			material->setSortKey(sortKey);
+			GeometryRecPtr spriteGeo = makePlaneGeo(image->getWidth()+1, image->getHeight()+1, 1, 1);
 			NodeRecPtr spriteGeoNode = Node::create();
 			spriteGeoNode->setCore(spriteGeo);
 			spriteGeo->setMaterial(material);
 			m_SpriteSwitcher.node()->addChild(spriteGeoNode);
 		}
 	}
+	SetSprite(m_CurrentSpriteKey, m_CurrentFrame);
 }
 
 void Sprite::SetSprite(std::string key, int frame)
 {
-	std::string spriteName = m_SpriteAtlas->GetSpriteName(m_Name, key, frame);
-	auto iter = m_SpriteIdToIndexMap.find(spriteName);
+	const std::string spriteName = m_SpriteAtlas->GetSpriteName(m_Name, key, frame);
+	const auto iter = m_SpriteIdToIndexMap.find(spriteName);
 	if (iter != m_SpriteIdToIndexMap.end())
 	{
-		int spriteSwitcherIndex = iter->second;
+		const int spriteSwitcherIndex = iter->second;
 		m_SpriteSwitcher->setChoice(spriteSwitcherIndex);
 		m_CurrentFrame = frame;
 	}
@@ -63,6 +66,17 @@ void Sprite::SetTimePerFrame(float timePerFrame)
 	m_TimePerFrame = timePerFrame;
 }
 
+Vec2f Sprite::GetDimensions() const
+{
+	const GeometryRecPtr currentActiveGeometry = dynamic_cast<Geometry*>(m_SpriteSwitcher.node()->getChild(m_SpriteSwitcher->getChoice())->getCore());
+	if (currentActiveGeometry != nullptr)
+	{
+		const SimpleTexturedMaterialRecPtr material = dynamic_cast<SimpleTexturedMaterial*>(currentActiveGeometry->getMaterial());
+		return Vec2f(material->getImage()->getWidth(), material->getImage()->getHeight());
+	}
+	return Vec2f(0, 0);
+}
+
 Sprite::~Sprite()
 {
 }
@@ -72,8 +86,12 @@ void Sprite::Update()
 	m_TimeUntilNextFrame -= Time::DeltaTime;
 	if(m_TimeUntilNextFrame < 0)
 	{
-		int nextFrame = (++m_CurrentFrame % m_SpriteList[m_CurrentSpriteKey].size()) + 1;
-		SetSprite(m_CurrentSpriteKey, nextFrame);
-		m_TimeUntilNextFrame = m_TimePerFrame;
+		const int nextFrame = ((m_CurrentFrame+1) % m_SpriteList[m_CurrentSpriteKey].size()) + 1;
+		if (m_CurrentFrame != nextFrame) 
+		{
+			m_CurrentFrame = nextFrame;
+			SetSprite(m_CurrentSpriteKey, m_CurrentFrame);
+			m_TimeUntilNextFrame = m_TimePerFrame;
+		}
 	}
 }

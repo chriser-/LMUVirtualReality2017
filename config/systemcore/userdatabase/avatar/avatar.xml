@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE simpleAvatar SYSTEM "http://dtd.inVRs.org/simpleAvatar_v1.0a4.dtd">
+<simpleAvatar version="1.0a4">
+	<name value="MedievalCitizen"/>
+	<representation>
+		<file type="VRML" name="undead.wrl"/>
+		<transformation>
+			<translation x="0" y="0" z="0"/>
+			<rotation x="0" y="1" z="0" angleDeg="180"/>
+			<scale x="0.08" y="0.08" z="0.08"/>
+		</transformation>
+	</representation>
+</simpleAvatar>

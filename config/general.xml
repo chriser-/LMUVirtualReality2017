@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE generalConfig SYSTEM "http://dtd.inVRs.org/generalConfig_v1.0a4.dtd">
+<generalConfig version="1.0a4">
+	<!-- This is the configuration for the inVRs Framework -->
+	<general>
+
+<!-- ************************ Snippet-2-1 - BEGIN ************************** -->
+		<Modules>
+			<option key="modulesConfiguration" value="modules.xml" />
+		</Modules>
+		<Interfaces>
+			<option key="inputInterfaceConfiguration"
+					value="inputInterface.xml" />
+		</Interfaces>
+<!-- ************************* Snippet-2-1 - END *************************** -->
+
+		<Interfaces>
+			<option key="outputInterfaceConfiguration" value="outputInterface.xml"/>
+		</Interfaces>
+		<SystemCore>
+			<option key="systemCoreConfiguration" value="systemCore.xml"/>
+		</SystemCore>
+	</general>
+	<paths>
+		<root directory=""/>
+		<path name="Plugins" 
+				directory=""/>
+		<path name="SystemCoreConfiguration" directory="final/config/systemcore/"/>
+		<path name="OutputInterfaceConfiguration" 
+				directory="final/config/outputinterface/"/>
+
+<!-- ************************ Snippet-2-2 - BEGIN ************************** -->
+		<path name="InputInterfaceConfiguration"
+				directory="final/config/inputinterface/" />
+		<path name="ModulesConfiguration" directory="final/config/modules/" />
+<!-- ************************* Snippet-2-2 - END *************************** -->
+
+		<!-- Paths for World DB Datastructure-->
+		<path name="WorldConfiguration" 
+				directory="final/config/systemcore/worlddatabase/"/>
+		<path name="EnvironmentConfiguration" 
+				directory="final/config/systemcore/worlddatabase/environment/"/>
+		<path name="EntityTypeConfiguration" 
+				directory="final/config/systemcore/worlddatabase/entity/"/>
+		<path name="TileConfiguration" 
+				directory="final/config/systemcore/worlddatabase/tile/"/>
+
+		<!-- Path for TransformationManager -->
+		<path name="TransformationManagerConfiguration" 
+				directory="final/config/systemcore/transformationmanager/" />
+
+		<!-- Paths for User DB Datastructure-->
+		<path name="UserConfiguration" 
+				directory="final/config/systemcore/userdatabase/" />
+		<path name="AvatarConfiguration" 
+				directory="final/config/systemcore/userdatabase/avatar/" />
+
+<!-- ************************ Snippet-4-6 - BEGIN ************************** -->
+		<path name="CursorRepresentationConfiguration" 
+				directory="final/config/systemcore/userdatabase/cursorRepresentation/" />
+		<path name="CursorTransformationModelConfiguration" 
+				directory="final/config/systemcore/userdatabase/cursorTransformationModel/" />
+<!-- ************************* Snippet-4-6 - END *************************** -->
+		
+<!-- ************************ Snippet-2-3 - BEGIN ************************** -->
+		<!-- Path for Interfaces Datastructure -->
+		<path name="ControllerManagerConfiguration" 
+			directory="final/config/inputinterface/controllermanager/" />
+	
+		<!-- Paths for Module Datastructure -->		
+		<path name="NavigationModuleConfiguration"
+				directory="final/config/modules/navigation/" />
+<!-- ************************* Snippet-2-3 - END *************************** -->
+
+<!-- ************************ Snippet-4-1 - BEGIN ************************** -->
+		<path name="InteractionModuleConfiguration" 
+				directory="final/config/modules/interaction/" />
+<!-- ************************* Snippet-4-1 - END *************************** -->
+		
+<!-- ************************ Snippet-5-1 - BEGIN ************************** -->
+		<path name="NetworkModuleConfiguration" 
+				directory="final/config/modules/network/" />
+<!-- ************************* Snippet-5-1 - END *************************** -->
+			
+		<!-- Paths for Models-->
+		<path name="Models" directory="models/"/>
+		<path name="Tiles" directory="models/tiles/"/>
+		<path name="Entities" directory="models/entities/"/>
+		<path name="Skybox" directory="models/skybox/"/>
+		<path name="Highlighters" directory="models/highlighters/"/>
+		<path name="Avatars" directory="models/avatars/"/>
+		<path name="HeightMaps" directory="models/heightmaps/"/>
+		<path name="CollisionMaps" directory="models/collisionmaps/"/>
+		<path name="Cursors" directory="models/cursors/"/>
+	</paths>
+</generalConfig>

@@ -3,6 +3,9 @@
 #include <OSGComponentTransform.h>
 #include <OSGComponentTransformBase.h>
 #include <OpenSG/OSGSceneGraphUtils.h>  // header for SceneGraphPrinter
+#include <OSGSimpleGeometry.h>
+#include <inVRs/SystemCore/UserDatabase/UserDatabase.h>
+
 
 OSG_USING_STD_NAMESPACE
 OSG_USING_NAMESPACE
@@ -30,7 +33,7 @@ SpriteAtlas* Game::GetSpriteAtlas(std::string spriteAtlasName)
 	{
 		return iter->second;
 	}
-	SpriteAtlas* atlas = new SpriteAtlas("units");
+	SpriteAtlas* atlas = new SpriteAtlas(spriteAtlasName);
 	m_SpriteAtlasses[spriteAtlasName] = atlas;
 	return atlas;
 }
@@ -40,7 +43,6 @@ Game::Game()
 {
 	m_gameInstance = this;
 	m_root = GroupNodeRefPtr::create();
-	SpriteAtlas* atlas = GetSpriteAtlas("units");
 	struct BirdPosInfo
 	{
 		std::string Name;
@@ -54,11 +56,52 @@ Game::Game()
 	};
 	for (auto bird : birds)
 	{
-		std::cout << "Creating " << bird.Name << std::endl;
-		Bird* b = new Bird(bird.Name, bird.SpriteName);
-		b->GetTransform()->setTranslation(bird.Position);
-		b->SetSpeed(30);
+		//std::cout << "Creating " << bird.Name << std::endl;
+		//Bird* b = new Bird(bird.Name, bird.SpriteName);
+		//b->GetTransform()->setTranslation(bird.Position);
+		//b->SetSpeed(30);
 	}
+
+	// floor
+	GameObject* floor = new GameObject("Floor", ComponentTransformNodeRefPtr::create());
+	GeometryNodeRefPtr floorGeo = GeometryNodeRefPtr::create();
+	floorGeo.node()->setCore(makePlaneGeo(5000, 5000, 1, 1));
+	floor->GetTransform().node()->addChild(floorGeo);
+	floor->GetTransform()->setRotation(Quaternion(Vec3f(1, 0, 0), osgDegree2Rad(90)));
+
+	// skybox
+	User* localUser = UserDatabase::getLocalUser();
+	std::cout << "local user " << localUser << std::endl;
+	CameraTransformation* camera = localUser->getCamera();
+	std::cout << "camera " << camera << std::endl;
+
+	std::string skyPath = "skybox/";
+	m_skybox.init(5, 5, 5, 1000, (skyPath + "lostatseaday/lostatseaday_dn.jpg").c_str(),
+		(skyPath + "lostatseaday/lostatseaday_up.jpg").c_str(),
+		(skyPath + "lostatseaday/lostatseaday_ft.jpg").c_str(),
+		(skyPath + "lostatseaday/lostatseaday_bk.jpg").c_str(),
+		(skyPath + "lostatseaday/lostatseaday_rt.jpg").c_str(),
+		(skyPath + "lostatseaday/lostatseaday_lf.jpg").c_str());
+	m_root.node()->addChild(m_skybox.getNodePtr());
+	m_skybox.setupRender(camera->getPosition());
+
+	// trees
+	GameObject* tree = new GameObject("Tree", ComponentTransformNodeRefPtr::create());
+	tree->GetTransform()->setTranslation(Vec3f(0, 0, -10));
+	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
+	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects", -2);
+	tree->AddComponent(treeSprite);
+	Vec2f dimensions = treeSprite->GetDimensions();
+	tree->Translate(Vec3f(0, dimensions.y()/2, 0));
+
+	// grass
+	GameObject* grass = new GameObject("Grass", ComponentTransformNodeRefPtr::create());
+	grass->GetTransform()->setTranslation(Vec3f(0, 0, -10));
+	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
+	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects", -1);
+	grass->AddComponent(grassSprite);
+	dimensions = grassSprite->GetDimensions();
+	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
 }
 
 void Game::Update()

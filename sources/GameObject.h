@@ -26,6 +26,7 @@ public:
 	GameObject(std::string name);
 	GameObject();
 	virtual void Update();
+	void Translate(Vec3f by) const;
 	void AddChild(GameObject* other);
 	void AddComponent(Component* component);
 	void RemoveComponent(Component* component);

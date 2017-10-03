@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE interaction SYSTEM "http://dtd.inVRs.org/interaction_v1.0a4.dtd">
+<interaction version="1.0a4">
+
+	<stateActionModels>
+		<selectionActionModel type="HighlightSelectionActionModel">
+			<arguments>
+				<arg key="modelType" type="string" value="OSG"/>
+				<arg key="modelPath" type="string" value="box.osg"/>
+			</arguments>
+		</selectionActionModel>
+		<manipulationActionModel type="HomerManipulationActionModel">
+			<arguments>
+				<arg key="usePickingOffset" type="bool" value="true"/>
+			</arguments>
+		</manipulationActionModel>
+	</stateActionModels>
+	
+	<stateTransitionModels>
+		<selectionChangeModel type="LimitRayCastSelectionChangeModel">
+			<arguments>
+				<arg key="rayDistanceThreshold" type="float" value="5"/>
+			</arguments>
+		</selectionChangeModel>
+		<unselectionChangeModel type="LimitRayCastSelectionChangeModel">
+			<arguments>
+				<arg key="rayDistanceThreshold" type="float" value="5"/>
+			</arguments>
+		</unselectionChangeModel>
+		<manipulationConfirmationModel type="ButtonPressManipulationChangeModel">
+			<arguments>
+				<arg key="buttonIndex" type="int" value="0"/>
+			</arguments>
+		</manipulationConfirmationModel>
+		<manipulationTerminationModel type="ButtonPressManipulationChangeModel">
+			<arguments>
+				<arg key="buttonIndex" type="int" value="0"/>
+			</arguments>
+		</manipulationTerminationModel>
+	</stateTransitionModels>
+	
+</interaction>

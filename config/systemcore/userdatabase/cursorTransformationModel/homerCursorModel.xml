@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE cursorTransformationModel SYSTEM "http://dtd.inVRs.org/cursorTransformationModel_v1.0a4.dtd">
+<cursorTransformationModel version="1.0a4">
+	<model name="HomerCursorModel">
+		<arguments>
+			<arg key="animationSpeed" type="float" value="12"/>
+			<arg key="forwardThreshold" type="float" value="0.1"/>
+			<arg key="backwardThreshold" type="float" value="0.1"/>
+		</arguments>
+	</model>
+</cursorTransformationModel>

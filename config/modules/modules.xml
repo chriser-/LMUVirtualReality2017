@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE modules SYSTEM "http://dtd.inVRs.org/modules_v1.0a4.dtd">
+<modules version="1.0a4">
+
+<!-- ************************ Snippet-2-5 - BEGIN ************************** -->
+	<module name="Navigation" configFile="navigation.xml" /> 
+<!-- ************************* Snippet-2-5 - END *************************** -->
+	
+<!-- ************************ Snippet-4-2 - BEGIN ************************** -->
+	<module name="Interaction" configFile="interaction.xml" />
+<!-- ************************* Snippet-4-2 - END *************************** -->
+	
+<!-- ************************ Snippet-5-2 - BEGIN ************************** -->
+	<module name="Network" configFile="network.xml" /> 
+<!-- ************************* Snippet-5-2 - END *************************** -->
+
+</modules>

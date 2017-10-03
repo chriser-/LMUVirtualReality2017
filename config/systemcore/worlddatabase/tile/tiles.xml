@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE tiles SYSTEM "http://dtd.inVRs.org/tiles_v1.0a4.dtd">
+<tiles version="1.0a4">
+	<tile id="1" name="Terrain21">
+		<tileProperties>
+			<size xSize="400" zSize="400"/>
+			<adjustment height="0" yRotation="0"/>
+		</tileProperties>
+		<representation copy="false">
+			<file type="OSB" name="PhysicsTestLandscape21_shader.osb"/>
+			<transformation>
+				<translation x="0" y="0" z="-400"/>
+				<rotation x="0" y="1" z="0" angleDeg="0"/>
+				<scale x="200" y="200" z="200"/>
+			</transformation>
+		</representation>
+	</tile>
+</tiles>

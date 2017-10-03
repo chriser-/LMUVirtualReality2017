@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE transformationManager SYSTEM "http://dtd.inVRs.org/transformationManager_v1.0a4.dtd">
+<transformationManager version="1.0a4">
+	<mergerList/>
+	<pipeList>
+		<pipe srcComponentName="NavigationModule" 
+				dstComponentName="TransformationManager" pipeType="Any" 
+				objectClass="Any" objectType="Any" objectId="Any" 
+				fromNetwork="0">
+			<modifier type="ApplyNavigationModifier"/>
+
+<!-- ************************ Snippet-3-1 - BEGIN ************************** -->
+			<modifier type="HeightMapModifier" />
+<!-- ************************* Snippet-3-1 - END *************************** -->
+
+<!-- ************************ Snippet-3-2 - BEGIN ************************** -->
+			<modifier type="CheckCollisionModifier">
+				<arguments>
+					<arg key="radius" type="float" value="1" />
+					<arg key="fileName" type="string" value="MedievalTownCollisionMap.wrl"/>
+				</arguments>
+			</modifier>
+<!-- ************************* Snippet-3-2 - END *************************** -->
+
+<!-- ************************ Snippet-5-3 - BEGIN ************************** -->
+			<modifier type="TransformationDistributionModifier" />
+<!-- ************************* Snippet-5-3 - END *************************** -->
+
+			<modifier type="UserTransformationWriter"/>
+			<modifier type="CameraTransformationWriter">
+			
+<!-- ************************ Snippet-3-3 - BEGIN ************************** -->
+				<arguments>
+					<arg key="cameraHeight" type="float" value="1.8"/>
+					<arg key="useGlobalYAxis" type="bool" value="true"/>
+				</arguments>
+<!-- ************************* Snippet-3-3 - END *************************** -->
+
+			</modifier>
+			<modifier type="AvatarTransformationWriter">
+				<arguments>
+					<arg key="clipRotationToYAxis" type="bool" value="true"/>
+				</arguments>
+			</modifier>
+
+<!-- ************************ Snippet-4-4 - BEGIN ************************** -->
+			<modifier type="ApplyCursorTransformationModifier" />
+			<modifier type="CursorTransformationWriter" />
+<!-- ************************* Snippet-4-4 - END *************************** -->
+
+		</pipe>
+
+<!-- ************************ Snippet-4-5 - BEGIN ************************** -->
+		<pipe srcComponentName="InteractionModule" dstComponentName="WorldDatabase"
+			pipeType="Any" objectClass="Any" objectType="Any" objectId="Any" 
+			fromNetwork="0">
+			<modifier type="ManipulationOffsetModifier"/>
+			<modifier type="TransformationDistributionModifier"/>
+			<modifier type="EntityTransformationWriter" />
+		</pipe>
+<!-- ************************* Snippet-4-5 - END *************************** -->
+
+<!-- ************************ Snippet-5-4 - BEGIN ************************** -->
+		<pipe srcComponentName="InteractionModule" dstComponentName="WorldDatabase"
+			pipeType="Any" objectClass="Any" objectType="Any" objectId="Any" 
+			fromNetwork="1">
+			<modifier type="EntityTransformationWriter" />
+		</pipe>
+<!-- ************************* Snippet-5-4 - END *************************** -->
+	
+<!-- ************************ Snippet-5-5 - BEGIN ************************** -->
+		<pipe srcComponentName="NavigationModule" dstComponentName="TransformationManager"
+			pipeType="Any" objectClass="Any" objectType="Any" objectId="Any" 
+			fromNetwork="1">
+			<modifier type="UserTransformationWriter" />
+			<modifier type="AvatarTransformationWriter" >
+				<arguments>
+					<arg key="clipRotationToYAxis" type="bool" value="true" />
+				</arguments>
+			</modifier>
+		</pipe>
+<!-- ************************* Snippet-5-5 - END *************************** -->
+
+	</pipeList>
+</transformationManager>

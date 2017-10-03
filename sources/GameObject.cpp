@@ -48,6 +48,11 @@ void GameObject::Update()
 	}
 }
 
+void GameObject::Translate(Vec3f by) const
+{
+	GetTransform()->setTranslation(GetTransform()->getTranslation() + by);
+}
+
 void GameObject::AddChild(GameObject* other)
 {
 	m_Children.insert(other);

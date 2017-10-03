@@ -1,0 +1,4 @@
+<textureatlas imagepath="spritesheet.png">
+	<subtexture name="tree" x="0" y="183" width="173" height="260"  MirrorVertical="false" MirrorHorizontal="false" />
+	<subtexture name="ground" x="0" y="0" width="900" height="182"  MirrorVertical="false" MirrorHorizontal="false" />
+</textureatlas>

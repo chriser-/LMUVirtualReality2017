@@ -23,10 +23,11 @@ private:
 	float m_TimePerFrame;
 	SpriteAtlas* m_SpriteAtlas;
 public:
-	Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas);
+	Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas, int sortKey = 0);
 	void SetSprite(std::string key, int frame);
 	void UpdateCurrentSprite(std::string key);
 	void SetTimePerFrame(float timePerFrame);
+	Vec2f GetDimensions() const;
 	~Sprite() override;
 	void Update() override;
 };
