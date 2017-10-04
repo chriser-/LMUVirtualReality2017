@@ -79,9 +79,13 @@ Game::Game()
 		Vec3f Position;
 	};
 	BirdPosInfo birds[] = {
-		{"Bird", "DuckBlue", Vec3f(0, 100, -100)},
-		//{"Bird 2", "DuckBlue", Vec3f(0,100,-10)},
-		//{"Bird 3", "DuckBlue", Vec3f(0,100,-10)},
+		{"Bird", "DuckBlue", Vec3f(10, 100, -100)},
+		{"Bird", "DuckBlue", Vec3f(20, 100, -100)},
+		{ "Bird", "DuckBlue", Vec3f(30, 100, -100) },
+		{ "Bird", "DuckBlue", Vec3f(40, 100, -100) },
+		{ "Bird", "DuckBlue", Vec3f(50, 100, -100) },
+		{ "Bird", "DuckBlue", Vec3f(60, 100, -100) },
+		{"Bird", "DuckBlue", Vec3f(70, 100, -100)},
 	};
 	for (auto bird : birds)
 	{
@@ -115,7 +119,7 @@ Game::Game()
 	// trees
 	GameObject* tree = new GameObject("Tree");
 	tree->GetTransform()->setTranslation(Vec3f(0, 0, -99));
-	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
+	//tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
 	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects", -2);
 	tree->AddComponent(treeSprite);
 	Vec2f dimensions = treeSprite->GetDimensions();
@@ -124,7 +128,7 @@ Game::Game()
 	// grass
 	GameObject* grass = new GameObject("Grass");
 	grass->GetTransform()->setTranslation(Vec3f(0, 0, -101));
-	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
+	//grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
 	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects", -1);
 	grass->AddComponent(grassSprite);
 	dimensions = grassSprite->GetDimensions();
