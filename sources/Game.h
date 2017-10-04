@@ -14,6 +14,7 @@ private:
 	OSG::GroupNodeRefPtr m_root;
 	Skybox m_skybox;
 	static Game* m_gameInstance;
+	void BirdDie();
 public:
 	ComponentTransformNodeRefPtr m_debugWand;
 	Game();

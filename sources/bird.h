@@ -9,6 +9,9 @@ class Bird : public GameObject
 private:
 	Vec3f m_direction;
 	int m_speed;
+	bool m_hit;
+	bool m_dead;
+	float m_hitSpriteTimer;
 	static const int START_VELOCITY_COUNT;
 	static const Vec3f START_VELOCITIES[];
 	static const std::string VELOCITY_TO_SPRITE[3][3];

@@ -18,6 +18,7 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas,
 	m_SpriteList = m_SpriteAtlas->GetSpriteList(name);
 	m_CurrentSpriteKey = m_SpriteList.begin()->first;
 	m_CurrentFrame = 1;
+	m_forceSpriteUpdate = false;
 	m_TimeUntilNextFrame = m_TimePerFrame = 0.2f;
 	// create one geometry + texture per sprite in the sprite list, and key this information for later use
 	int spriteSwitcherIndex = 0;
@@ -44,6 +45,7 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas,
 
 void Sprite::SetSprite(std::string key, int frame)
 {
+	std::cout << "Set sprite to " << key << " frame " << frame << std::endl;
 	const std::string spriteName = m_SpriteAtlas->GetSpriteName(m_Name, key, frame);
 	const auto iter = m_SpriteIdToIndexMap.find(spriteName);
 	if (iter != m_SpriteIdToIndexMap.end())
@@ -54,9 +56,14 @@ void Sprite::SetSprite(std::string key, int frame)
 	}
 }
 
-void Sprite::UpdateCurrentSprite(std::string key)
+void Sprite::UpdateCurrentSprite(std::string key, int frame)
 {
 	m_CurrentSpriteKey = key;
+	if(frame > 0)
+	{
+		m_forceSpriteUpdate = true;
+		m_CurrentFrame = frame;
+	}
 }
 
 void Sprite::SetTimePerFrame(float timePerFrame)
@@ -81,11 +88,11 @@ Sprite::~Sprite()
 
 void Sprite::Update()
 {
-        m_TimeUntilNextFrame -= MyTime::DeltaTime;
-	if(m_TimeUntilNextFrame < 0)
+	m_TimeUntilNextFrame -= MyTime::DeltaTime;
+	if(m_TimeUntilNextFrame < 0 || m_forceSpriteUpdate)
 	{
 		const int nextFrame = ((m_CurrentFrame+1) % m_SpriteList[m_CurrentSpriteKey].size()) + 1;
-		if (m_CurrentFrame != nextFrame) 
+		if (m_CurrentFrame != nextFrame || m_forceSpriteUpdate)
 		{
 			m_CurrentFrame = nextFrame;
 			SetSprite(m_CurrentSpriteKey, m_CurrentFrame);

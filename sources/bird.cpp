@@ -49,6 +49,8 @@ Bird::Bird(std::string name, std::string spriteName) : GameObject(name)
 	//m_Transform->setTranslation(Vec3f(0,100,-10));
 	m_direction = START_VELOCITIES[rand() % START_VELOCITY_COUNT];
 	m_speed = 1;
+	m_hitSpriteTimer = 0.5f;
+	m_hit = m_dead = false;
 	m_BirdSprite = new Sprite(GetTransform().node(), spriteName, "units");
 	m_BirdSprite->SetTimePerFrame(0.05);
 	AddComponent(m_BirdSprite);
@@ -59,35 +61,54 @@ void Bird::Update()
 	GameObject::Update();
 	if(m_Transform.core() != nullptr)
 	{
-		// keep position in bounds
-		float newXDirection, newYDirection, newZDirection;
+		if(m_hit)
+		{
+			m_hitSpriteTimer -= MyTime::DeltaTime;
+			if (m_hitSpriteTimer > 0)
+				return;
+			m_dead = true;
+			m_BirdSprite->UpdateCurrentSprite("dead", 1);
+		}
 		float xPosition, yPosition, zPosition;
-		m_direction.getSeparateValues(newXDirection, newYDirection, newZDirection);
 		m_Transform->getTranslation().getSeparateValues(xPosition, yPosition, zPosition);
-		if(xPosition > 200)
+		if (!m_dead)
 		{
-			newXDirection = -1;
-		}
-		else if(xPosition < -200)
-		{
-			newXDirection = 1;
-		}
-		if(yPosition > 200)
-		{
-			newYDirection = -1;
-		}
-		else if(yPosition < 100)
-		{
-			newYDirection = 1;
-		}
-		//std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
-		m_direction.setValues(newXDirection, newYDirection, newZDirection);
+			// keep position in bounds
+			float newXDirection, newYDirection, newZDirection;
+			m_direction.getSeparateValues(newXDirection, newYDirection, newZDirection);
+			
+			if (xPosition > 200)
+			{
+				newXDirection = -1;
+			}
+			else if (xPosition < -200)
+			{
+				newXDirection = 1;
+			}
+			if (yPosition > 200)
+			{
+				newYDirection = -1;
+			}
+			else if (yPosition < 100)
+			{
+				newYDirection = 1;
+			}
+			//std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
+			m_direction.setValues(newXDirection, newYDirection, newZDirection);
 
-		// update sprite to match velocity
-		std::string newSprite = VELOCITY_TO_SPRITE[int(newXDirection) +1][int(newYDirection) +1];
-		//std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
-		m_BirdSprite->UpdateCurrentSprite(newSprite);
-
+			// update sprite to match velocity
+			std::string newSprite = VELOCITY_TO_SPRITE[int(newXDirection) + 1][int(newYDirection) + 1];
+			//std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
+			m_BirdSprite->UpdateCurrentSprite(newSprite);
+		}
+		else
+		{
+			if(yPosition < -20)
+			{
+				delete this;
+				return;
+			}
+		}
 		// translate into velocity direction with speed
         Translate(m_direction * m_speed * MyTime::DeltaTime);
 		//std::cout << "Position is (" << m_Transform->getTranslation().x() << "," << m_Transform->getTranslation().y() << ")" << std::endl;
@@ -107,7 +128,14 @@ void Bird::SetSprite(Sprite* sprite)
 
 void Bird::OnHit()
 {
-	std::cout << "Bird was hit!" << std::endl;
+	if (!m_hit)
+	{
+		std::cout << "Bird was hit!" << std::endl;
+		m_hit = true;
+		m_BirdSprite->UpdateCurrentSprite("hit", 1);
+		m_speed = 100;
+		m_direction = Vec3f(0, -1, 0);
+	}
 }
 
 Bird::~Bird()

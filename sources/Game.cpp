@@ -88,7 +88,7 @@ Game::Game()
 		//std::cout << "Creating " << bird.Name << std::endl;
 		Bird* b = new Bird(bird.Name, bird.SpriteName);
 		b->GetTransform()->setTranslation(bird.Position);
-		b->SetSpeed(0);
+		b->SetSpeed(30);
 	}
 
 	// floor
