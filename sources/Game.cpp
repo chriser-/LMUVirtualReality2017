@@ -87,7 +87,7 @@ Game::Game()
 	CameraTransformation* camera = localUser->getCamera();
 
 	std::string skyPath = "skybox/";
-	m_skybox.init(5, 5, 5, 1000, (skyPath + "lostatseaday/lostatseaday_dn.jpg").c_str(),
+	m_skybox.init(20, 20, 20, 10000, (skyPath + "lostatseaday/lostatseaday_dn.jpg").c_str(),
 		(skyPath + "lostatseaday/lostatseaday_up.jpg").c_str(),
 		(skyPath + "lostatseaday/lostatseaday_ft.jpg").c_str(),
 		(skyPath + "lostatseaday/lostatseaday_bk.jpg").c_str(),
