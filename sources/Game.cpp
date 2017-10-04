@@ -35,12 +35,15 @@ void Game::RemoveBehavior(GameObject* behavior)
 	if (behavior->GetName() == "Bird")
 	{
 		m_root.node()->getChild(0)->subChild(nodeToDelete);
+		std::cout << "Removed Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ") from graph" << std::endl;
 	}
 	else
 	{
 		m_root.node()->subChild(nodeToDelete);
 	}
 	m_behaviors.erase(behavior->GetTransform().node());
+	std::cout << "Removed Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ") from map" << std::endl;
+
 }
 
 GameObject* Game::GetBehavior(NodeRecPtr fromNode)
