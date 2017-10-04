@@ -155,8 +155,8 @@ void Game::Update()
 	// Update all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		if (behavior.second != nullptr)
-		{
+		if (behavior.second != nullptr) {
+			std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
 			behavior.second->Update();
 		}
 	}
