@@ -6,6 +6,7 @@
 #include <OSGSimpleGeometry.h>
 #include <OSGNameAttachment.h>
 #include <inVRs/SystemCore/UserDatabase/UserDatabase.h>
+#include <mutex>
 
 
 OSG_USING_STD_NAMESPACE
@@ -40,7 +41,7 @@ void Game::RemoveBehavior(GameObject* behavior)
 	{
 		m_root.node()->subChild(nodeToDelete);
 	}
-	m_behaviors.erase(behavior->GetTransform().node());
+	m_behaviorsToDelete.insert(behavior->GetTransform().node());
 	std::cout << "Removed Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ") from map" << std::endl;
 
 }
@@ -154,10 +155,14 @@ void Game::Update()
 	// Update all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		std::shared_ptr<GameObject> go = std::shared_ptr<GameObject>(behavior.second);
 		std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
-		go->Update();
+		behavior.second->Update();
 	}
+	for(auto& behaviorToDelete : m_behaviorsToDelete)
+	{
+		m_behaviors.erase(behaviorToDelete);
+	}
+	m_behaviorsToDelete.clear();
 }
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
@@ -173,6 +178,11 @@ Game::~Game()
 	{
 		RemoveBehavior(behavior.second);
 	}
+	for (auto& behaviorToDelete : m_behaviorsToDelete)
+	{
+		m_behaviors.erase(behaviorToDelete);
+	}
+	m_behaviorsToDelete.clear();
 }
 
 void Game::Scroll(int direction) const
