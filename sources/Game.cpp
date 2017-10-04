@@ -19,7 +19,6 @@ void Game::AddBehavior(GameObject* behavior)
 	// add behavior to root node
 	if(behavior->GetName().compare("Bird") == 0)
 	{
-		std::cout << "bird to 2nd group" << std::endl;
 		m_root.node()->getChild(0)->addChild(behavior->GetTransform().node());
 	}
 	else
@@ -155,10 +154,9 @@ void Game::Update()
 	// Update all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		if (behavior.second != nullptr) {
-			std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
-			behavior.second->Update();
-		}
+		std::shared_ptr<GameObject> go = std::shared_ptr<GameObject>(behavior.second);
+		std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
+		go->Update();
 	}
 }
 
