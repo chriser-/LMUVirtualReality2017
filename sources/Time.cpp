@@ -2,14 +2,15 @@
 #include <iostream>
 #include <chrono>
 
-double Time::DeltaTime = 0;
-double Time::TimeScale = 1;
-double Time::RealtimeSinceStartup = 0;
-double Time::UnscaledDeltaTime = 0;
-int Time::FrameCount = 0;
-high_resolution_clock::time_point Time::lastUpdateTimepoint = high_resolution_clock::now();
 
-void Time::UpdateDeltaTime()
+double MyTime::DeltaTime = 0;
+double MyTime::TimeScale = 1;
+double MyTime::RealtimeSinceStartup = 0;
+double MyTime::UnscaledDeltaTime = 0;
+int MyTime::FrameCount = 0;
+high_resolution_clock::time_point MyTime::lastUpdateTimepoint = high_resolution_clock::now();
+
+void MyTime::UpdateDeltaTime()
 {
 	double deltaTime = duration_cast<duration<double>>(high_resolution_clock::now() - lastUpdateTimepoint).count();
 	DeltaTime = deltaTime * TimeScale;
@@ -19,3 +20,4 @@ void Time::UpdateDeltaTime()
 	//std::cout << "Avg FPS since startup: " << (FrameCount / RealtimeSinceStartup) << std::endl;
 	lastUpdateTimepoint = high_resolution_clock::now();
 }
+

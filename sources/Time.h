@@ -3,7 +3,8 @@
 
 using namespace std::chrono;
 
-class Time
+
+class MyTime
 {
 public:
 	static double DeltaTime;
@@ -15,3 +16,4 @@ public:
 private:
 	static high_resolution_clock::time_point lastUpdateTimepoint;
 };
+

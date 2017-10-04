@@ -10,7 +10,7 @@ set(USER_CMAKE_TEXT "initialized by '${CMAKE_CURRENT_LIST_FILE}'")
 set(User_use64BitCompiler True CACHE BOOL ${USER_CMAKE_TEXT})
 
 # How should your program be named? Change "MyProject" in the next line
-set(User_ProjectName "MyProject" CACHE STRING ${USER_CMAKE_TEXT})
+set(User_ProjectName "DuckHuntCAVE" CACHE STRING ${USER_CMAKE_TEXT})
 
 # Do you want to build a "Debug" or a "Release" version? Change "Release"
 # in the next line if necessary. Please avoid Typos!
@@ -49,7 +49,6 @@ set(CMAKE_INSTALL_PREFIX "." CACHE PATH ${USER_CMAKE_TEXT})
 #set(Boost_USE_MULTITHREADED ON CACHE BOOL ${USER_CMAKE_TEXT})
 set(Boost_NO_SYSTEM_PATHS ON CACHE BOOL ${USER_CMAKE_TEXT})
 set(Boost_USE_STATIC_LIBS ON CACHE BOOL ${USER_CMAKE_TEXT})
-
 
 if(WIN32)
   set(BOOST_ROOT "${CMAKE_CURRENT_LIST_DIR}/../libraries/install/${libPathArchitecture}/boost${boost_ver}"  CACHE PATH ${USER_CMAKE_TEXT})

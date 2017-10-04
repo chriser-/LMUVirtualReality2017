@@ -4,11 +4,12 @@ cmake_minimum_required(VERSION 2.8)
 project(${User_ProjectName})
 
 
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/")
 include(AddProject)
 
 set(OPENSG_MODULES OSGBase OSGSystem OSGWindow OSGWindowGLUT OSGDrawable OSGUtil OSGGroup OSGFileIO OSGImageFileIO)
+
+set(INVRS_MODULES OpenSGApplicationBase Skybox HeightMap AvataraWrapper CollisionMap Navigation Interaction Network ControllerManager TextureManager)
 
 set(EXECUTABLE_OUTPUT_PATH ../exe/)
 add_project(${PROJECT_NAME}
@@ -18,6 +19,7 @@ add_project(${PROJECT_NAME}
 	OPENSG_MODULES ${OPENSG_MODULES}
 	CSM_MODULE
 	VRPN_MODULE
+	INVRS_MODULES ${INVRS_MODULES}
 )
 
 

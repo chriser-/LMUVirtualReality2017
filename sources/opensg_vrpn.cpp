@@ -1,4 +1,4 @@
-#define WIN32 1
+//#define WIN32 1
 
 #include <cstdlib>
 #include <cstddef>
@@ -322,7 +322,7 @@ void setupGLUT(int *argc, char *argv[])
 	glutCreateWindow("OpenSG CSMDemo with VRPN API");
 	glutDisplayFunc([]()
 	{
-		Time::UpdateDeltaTime();
+                MyTime::UpdateDeltaTime();
 		game->Update();
 		// black navigation window
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -351,10 +351,10 @@ void setupGLUT(int *argc, char *argv[])
 
 int main(int argc, char **argv)
 {
-#if WIN32
+
 	OSG::preloadSharedObject("OSGFileIO");
 	OSG::preloadSharedObject("OSGImageFileIO");
-#endif
+
 	try
 	{
 		bool cfgIsSet = false;

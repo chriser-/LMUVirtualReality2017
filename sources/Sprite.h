@@ -8,12 +8,11 @@
 #include <OSGGeometry.h>
 #include <OSGSimpleGeometry.h>
 
-OSG_USING_NAMESPACE
 
 class Sprite : public Component
 {
 private:
-	SwitchNodeRefPtr m_SpriteSwitcher;
+	OSG::SwitchNodeRefPtr m_SpriteSwitcher;
 	std::string m_Name;
 	std::unordered_map<std::string, int> m_SpriteIdToIndexMap;
 	std::unordered_map<std::string, std::vector<std::string>> m_SpriteList;

@@ -7,13 +7,11 @@
 #include <OSGSimpleGeometry.h>
 #include "Time.h"
 
-OSG_USING_NAMESPACE
-
 Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas, int sortKey)
 {
 	m_Name = name;
 	m_SpriteAtlas = Game::Instance()->GetSpriteAtlas(spriteAtlas);
-	m_SpriteSwitcher = SwitchNodeRefPtr::create();
+        m_SpriteSwitcher = OSG::SwitchNodeRefPtr::create();
 	m_Node = m_SpriteSwitcher;
 	std::cout << "Adding sprite switcher (" << m_SpriteSwitcher.node() << " to node " << parentNode << std::endl;
 	parentNode->addChild(m_SpriteSwitcher);
@@ -30,12 +28,12 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas,
 			const std::string spriteName = sprite.second[i];
 			std::cout << "Making Geo for sprite " << spriteName << " at switcherIndex " << spriteSwitcherIndex << std::endl;
 			m_SpriteIdToIndexMap[spriteName] = spriteSwitcherIndex++;
-			const ImageRecPtr image = m_SpriteAtlas->GetImage(spriteName);
-			SimpleTexturedMaterialRecPtr material = SimpleTexturedMaterial::create();
+                        const OSG::ImageRecPtr image = m_SpriteAtlas->GetImage(spriteName);
+                        OSG::SimpleTexturedMaterialRecPtr material = OSG::SimpleTexturedMaterial::create();
 			material->setImage(image);
 			material->setSortKey(sortKey);
-			GeometryRecPtr spriteGeo = makePlaneGeo(image->getWidth()+1, image->getHeight()+1, 1, 1);
-			NodeRecPtr spriteGeoNode = Node::create();
+                        OSG::GeometryRecPtr spriteGeo = OSG::makePlaneGeo(image->getWidth()+1, image->getHeight()+1, 1, 1);
+                        OSG::NodeRecPtr spriteGeoNode = OSG::Node::create();
 			spriteGeoNode->setCore(spriteGeo);
 			spriteGeo->setMaterial(material);
 			m_SpriteSwitcher.node()->addChild(spriteGeoNode);
@@ -68,13 +66,13 @@ void Sprite::SetTimePerFrame(float timePerFrame)
 
 Vec2f Sprite::GetDimensions() const
 {
-	const GeometryRecPtr currentActiveGeometry = dynamic_cast<Geometry*>(m_SpriteSwitcher.node()->getChild(m_SpriteSwitcher->getChoice())->getCore());
+        const OSG::GeometryRecPtr currentActiveGeometry = dynamic_cast<OSG::Geometry*>(m_SpriteSwitcher.node()->getChild(m_SpriteSwitcher->getChoice())->getCore());
 	if (currentActiveGeometry != nullptr)
 	{
-		const SimpleTexturedMaterialRecPtr material = dynamic_cast<SimpleTexturedMaterial*>(currentActiveGeometry->getMaterial());
-		return Vec2f(material->getImage()->getWidth(), material->getImage()->getHeight());
+                const OSG::SimpleTexturedMaterialRecPtr material = dynamic_cast<OSG::SimpleTexturedMaterial*>(currentActiveGeometry->getMaterial());
+                return OSG::Vec2f(material->getImage()->getWidth(), material->getImage()->getHeight());
 	}
-	return Vec2f(0, 0);
+        return OSG::Vec2f(0, 0);
 }
 
 Sprite::~Sprite()
@@ -83,7 +81,7 @@ Sprite::~Sprite()
 
 void Sprite::Update()
 {
-	m_TimeUntilNextFrame -= Time::DeltaTime;
+        m_TimeUntilNextFrame -= MyTime::DeltaTime;
 	if(m_TimeUntilNextFrame < 0)
 	{
 		const int nextFrame = ((m_CurrentFrame+1) % m_SpriteList[m_CurrentSpriteKey].size()) + 1;

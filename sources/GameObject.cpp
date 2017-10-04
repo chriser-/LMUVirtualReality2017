@@ -17,27 +17,27 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::ctor(std::string name, ComponentTransformNodeRefPtr root)
+void GameObject::ctor(std::string name, OSG::ComponentTransformNodeRefPtr root)
 {
 	m_Name = name;
 	m_Transform = root;
-	m_Group = GroupNodeRefPtr::create();
+        m_Group = OSG::GroupNodeRefPtr::create();
 	m_Transform.node()->addChild(m_Group);
 	Game::Instance()->AddBehavior(this);
 }
 
-GameObject::GameObject(std::string name, ComponentTransformNodeRefPtr rootNode)
+GameObject::GameObject(std::string name, OSG::ComponentTransformNodeRefPtr rootNode)
 {
 	ctor(name, rootNode);
 }
 
 GameObject::GameObject(std::string name)
 {
-	ctor(name, ComponentTransformNodeRefPtr::create());
+        ctor(name, OSG::ComponentTransformNodeRefPtr::create());
 }
 GameObject::GameObject()
 {
-	ctor("GameObject", ComponentTransformNodeRefPtr::create());
+        ctor("GameObject", OSG::ComponentTransformNodeRefPtr::create());
 }
 
 void GameObject::Update()
@@ -48,7 +48,7 @@ void GameObject::Update()
 	}
 }
 
-void GameObject::Translate(Vec3f by) const
+void GameObject::Translate(OSG::Vec3f by) const
 {
 	GetTransform()->setTranslation(GetTransform()->getTranslation() + by);
 }

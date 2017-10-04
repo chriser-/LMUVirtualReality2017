@@ -9,9 +9,9 @@ void Component::Update()
 {
 }
 
-NodeTransitPtr Component::GetNode() const
+OSG::NodeTransitPtr Component::GetNode() const
 {
-	return NodeTransitPtr(m_Node);
+        return OSG::NodeTransitPtr(m_Node);
 }
 
 size_t Component::hash_value(const Component& a)

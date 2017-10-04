@@ -3,15 +3,13 @@
 #include <OSGConfig.h>
 #include <OSGNode.h>
 
-OSG_USING_NAMESPACE
-
 class Component
 {
 protected:
-	NodeRecPtr m_Node;
+	OSG::NodeRecPtr m_Node;
 public:
 	virtual ~Component();
 	virtual void Update();
-	NodeTransitPtr GetNode() const;
+	OSG::NodeTransitPtr GetNode() const;
 	static size_t hash_value(const Component& a);
 };

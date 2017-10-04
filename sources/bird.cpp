@@ -89,7 +89,7 @@ void Bird::Update()
 		m_BirdSprite->UpdateCurrentSprite(newSprite);
 
 		// translate into velocity direction with speed
-		Translate(m_direction * m_speed * Time::DeltaTime);
+                Translate(m_direction * m_speed * MyTime::DeltaTime);
 		std::cout << "Position is (" << m_Transform->getTranslation().x() << "," << m_Transform->getTranslation().y() << ")" << std::endl;
 	}
 }

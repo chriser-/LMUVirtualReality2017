@@ -11,7 +11,7 @@ class Game
 private:
 	boost::unordered_set<GameObject*> m_behaviors;
 	std::unordered_map<std::string, SpriteAtlas*> m_SpriteAtlasses;
-	GroupNodeRefPtr m_root;
+	OSG::GroupNodeRefPtr m_root;
 	Skybox m_skybox;
 	static Game* m_gameInstance;
 public:
@@ -19,7 +19,7 @@ public:
     void Update();
 	~Game();
 	void Scroll(int direction) const;
-	NodeTransitPtr GetRootNode() const;
+	OSG::NodeTransitPtr GetRootNode() const;
 	static Game* Instance();
 	void AddBehavior(GameObject* behavior);
 	void RemoveBehavior(GameObject* behavior);

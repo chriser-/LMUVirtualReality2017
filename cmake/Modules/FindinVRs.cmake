@@ -55,7 +55,7 @@
 ###############################################################################
 
 # default modules:
-set ( inVRs_CHECK_MODULES 2DPhysics 3DPhysics Interaction JointInteraction Navigation Network )
+set ( inVRs_CHECK_MODULES 2DPhysics 3DPhysics Interaction JointInteraction Navigation Network Skybox TextureManager )
 
 #make cache-entry:
 set ( inVRs_ROOT_DIR ${inVRs_ROOT_DIR} CACHE PATH "Install prefix of the inVRs library")
