@@ -138,6 +138,7 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
+	return;
 	m_debugWand->setTranslation(Vec3f(position.x(), position.y(), position.z()));
 	m_debugWand->setRotation(orientation);
 }
