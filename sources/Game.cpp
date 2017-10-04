@@ -14,10 +14,18 @@ OSG_USING_NAMESPACE
 
 void Game::AddBehavior(GameObject* behavior)
 {
-	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << " (node: " << behavior->GetTransform().node() << ")" << std::endl;
+	std::cout << "Adding Behavior " << behavior->GetName() << " " << GameObject::hash_value(*behavior) << " (node: " << behavior->GetTransform().node() << ")" << std::endl;
 	m_behaviors[behavior->GetTransform().node()] = behavior;
 	// add behavior to root node
-	m_root.node()->addChild(behavior->GetTransform().node());
+	if(behavior->GetName().compare("Bird") == 0)
+	{
+		std::cout << "bird to 2nd group" << std::endl;
+		m_root.node()->getChild(0)->addChild(behavior->GetTransform().node());
+	}
+	else
+	{
+		m_root.node()->addChild(behavior->GetTransform().node());
+	}
 }
 
 void Game::RemoveBehavior(GameObject* behavior)
@@ -25,7 +33,14 @@ void Game::RemoveBehavior(GameObject* behavior)
 	std::cout << "Removing Behavior " << GameObject::hash_value(*behavior) << std::endl;
 	m_behaviors.erase(behavior->GetTransform().node());
 	const NodeRecPtr nodeToDelete = behavior->GetTransform().node();
-	m_root.node()->subChild(nodeToDelete);
+	if (behavior->GetName() == "Bird")
+	{
+		m_root.node()->getChild(0)->subChild(nodeToDelete);
+	}
+	else
+	{
+		m_root.node()->subChild(nodeToDelete);
+	}
 }
 
 GameObject* Game::GetBehavior(NodeRecPtr fromNode)
@@ -55,6 +70,7 @@ Game::Game()
 {
 	m_gameInstance = this;
 	m_root = GroupNodeRefPtr::create();
+	m_root.node()->addChild(GroupNodeRefPtr::create()); // bird root (hack for collision)
 	setName(m_root.node(), "Root");
 	struct BirdPosInfo
 	{
@@ -63,7 +79,7 @@ Game::Game()
 		Vec3f Position;
 	};
 	BirdPosInfo birds[] = {
-		{"Bird 1", "DuckBlue", Vec3f(0, 100, -100)},
+		{"Bird", "DuckBlue", Vec3f(0, 100, -100)},
 		//{"Bird 2", "DuckBlue", Vec3f(0,100,-10)},
 		//{"Bird 3", "DuckBlue", Vec3f(0,100,-10)},
 	};
@@ -114,7 +130,7 @@ Game::Game()
 	dimensions = grassSprite->GetDimensions();
 	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
 
-	/*
+	
 	// debug wand display
 	m_debugWand = ComponentTransformNodeRefPtr::create();
 	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
@@ -124,7 +140,7 @@ Game::Game()
 	wandChild.node()->addChild(wandGeo);
 	m_debugWand.node()->addChild(wandChild);
 	m_root.node()->addChild(m_debugWand);
-	*/
+	
 }
 
 void Game::Update()
@@ -138,7 +154,6 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	return;
 	m_debugWand->setTranslation(Vec3f(position.x(), position.y(), position.z()));
 	m_debugWand->setRotation(orientation);
 }

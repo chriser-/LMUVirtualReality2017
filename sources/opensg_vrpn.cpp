@@ -111,7 +111,7 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 		IntersectActionRefPtr act = IntersectAction::create();
 
 		act->setLine(l);
-		act->apply(game->GetRootNode().get());
+		act->apply(game->GetRootNode()->getChild(0));
 
 		// did we hit something?
 		if (act->didHit())
