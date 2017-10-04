@@ -114,6 +114,7 @@ Game::Game()
 	dimensions = grassSprite->GetDimensions();
 	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
 
+	/*
 	// debug wand display
 	m_debugWand = ComponentTransformNodeRefPtr::create();
 	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
@@ -123,6 +124,7 @@ Game::Game()
 	wandChild.node()->addChild(wandGeo);
 	m_debugWand.node()->addChild(wandChild);
 	m_root.node()->addChild(m_debugWand);
+	*/
 }
 
 void Game::Update()
