@@ -57,13 +57,13 @@ Game::Game()
 	for (auto bird : birds)
 	{
 		//std::cout << "Creating " << bird.Name << std::endl;
-		//Bird* b = new Bird(bird.Name, bird.SpriteName);
-		//b->GetTransform()->setTranslation(bird.Position);
-		//b->SetSpeed(30);
+		Bird* b = new Bird(bird.Name, bird.SpriteName);
+		b->GetTransform()->setTranslation(bird.Position);
+		b->SetSpeed(30);
 	}
 
 	// floor
-	GameObject* floor = new GameObject("Floor", ComponentTransformNodeRefPtr::create());
+	GameObject* floor = new GameObject("Floor");
 	GeometryNodeRefPtr floorGeo = GeometryNodeRefPtr::create();
 	floorGeo.node()->setCore(makePlaneGeo(5000, 5000, 1, 1));
 	floor->GetTransform().node()->addChild(floorGeo);
@@ -86,7 +86,7 @@ Game::Game()
 	m_skybox.setupRender(camera->getPosition());
 
 	// trees
-	GameObject* tree = new GameObject("Tree", ComponentTransformNodeRefPtr::create());
+	GameObject* tree = new GameObject("Tree");
 	tree->GetTransform()->setTranslation(Vec3f(0, 0, -10));
 	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
 	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects", -2);
@@ -95,13 +95,21 @@ Game::Game()
 	tree->Translate(Vec3f(0, dimensions.y()/2, 0));
 
 	// grass
-	GameObject* grass = new GameObject("Grass", ComponentTransformNodeRefPtr::create());
+	GameObject* grass = new GameObject("Grass");
 	grass->GetTransform()->setTranslation(Vec3f(0, 0, -10));
 	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
 	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects", -1);
 	grass->AddComponent(grassSprite);
 	dimensions = grassSprite->GetDimensions();
 	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
+
+	// debug wand display
+	m_debugWand = ComponentTransformNodeRefPtr::create();
+	m_debugWand->setScale(Vec3f(1, 1, 1));
+	GeometryNodeRefPtr wandGeo = GeometryNodeRefPtr::create();
+	wandGeo.node()->setCore(makeCylinderGeo(5000, 3, 100, true, true, true).get());
+	m_debugWand.node()->addChild(wandGeo);
+	m_root.node()->addChild(m_debugWand);
 }
 
 void Game::Update()
@@ -111,6 +119,12 @@ void Game::Update()
 	{
 		behavior->Update();
 	}
+}
+
+void Game::UpdateWand(Vec3f position, Quaternion orientation) const
+{
+	m_debugWand->setTranslation(position);
+	m_debugWand->setRotation(orientation);
 }
 
 Game::~Game()

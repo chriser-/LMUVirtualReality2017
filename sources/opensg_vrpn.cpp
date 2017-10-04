@@ -74,6 +74,10 @@ void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tr
 {
 	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
 	wand_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
+	if(game != nullptr)
+	{
+		game->UpdateWand(wand_position, wand_orientation);
+	}
 }
 
 auto analog_values = Vec3f();
@@ -82,11 +86,117 @@ void VRPN_CALLBACK callback_analog(void* userData, const vrpn_ANALOGCB analog)
 	if (analog.num_channel >= 2)
 		analog_values = Vec3f(analog.channel[0], 0, -analog.channel[1]);
 }
-
+GeoPnt3fPropertyRefPtr isectPoints;
 void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 {
 	if (button.button == 0 && button.state == 1)
 		print_tracker();
+	std::cout << "button: " << button.button << " state: " << button.state << std::endl;
+	// send a ray through the clicked pixel
+	/*
+	Intersection testing for rays is done using an
+	IntersectAction. The ray itself is calculated by the
+	SimpleSceneManager, given the clicked pixel.
+
+	It needs to be set up with the line that is to be
+	intersected. A line is a semi-infinite ray which has a
+	starting point and a direction, and extends in the
+	direction to infinity.
+
+	To do the actual test the Action's apply() method is used.
+
+	The results can be received from the Action. The main
+	difference is if something was hit or not, which is
+	returned in didHit().
+
+	If an intersection did occur, the other data elements are
+	valid, otherwise they are undefined.
+
+	The information that is stored in the action is the object
+	which was hit, the triangle of the object that was hit (in
+	the form of its index) and the actual hit position.
+	*/
+	if (button.button == 0 && button.state == 1)
+	{
+		Line l;
+
+		// point 1 is the position of the wand
+		// point 2 is the position+direction of the wand
+		Vec3f point2;
+		wand_orientation.multVec(Vec3f(0, 0, 1), point2);
+		point2 += wand_position;
+		l.setValue(wand_position, point2);
+
+		std::cout << "From " << l.getPosition()
+			<< ", dir " << l.getDirection() << std::endl;
+
+		IntersectActionRefPtr act = IntersectAction::create();
+
+		act->setLine(l);
+		act->apply(game->GetRootNode().get());
+
+		isectPoints->setValue(l.getPosition(), 0);
+		isectPoints->setValue(l.getPosition() + l.getDirection(), 1);
+
+
+		// did we hit something?
+		if (act->didHit())
+		{
+			std::cout << "something was hit" << std::endl;
+			// yes!! print and highlight it
+			std::cout << " object " << act->getHitObject()
+				<< " tri " << act->getHitTriangle()
+				<< " at " << act->getHitPoint();
+
+			act->getHitObject();
+
+			// stop the ray on the hit surface
+			Pnt3f is = l.getPosition() +
+				l.getDirection() * act->getHitT();
+
+			isectPoints->setValue(is, 1);
+
+			// find the triangle that was hit
+			TriangleIterator it(act->getHitObject());
+			it.seek(act->getHitTriangle());
+
+			// Draw its normal at the intersection point
+			isectPoints->setValue(is, 2);
+			isectPoints->setValue(is + act->getHitNormal() * 5, 3);
+
+
+			// calculate its vertex positions in world space
+			Matrix m;
+			act->getHitObject()->getToWorld(m);
+
+			// and turn them into a triangle
+			Pnt3f p = it.getPosition(0);
+			m.mult(p, p);
+			isectPoints->setValue(p, 4);
+			p = it.getPosition(1);
+			m.mult(p, p);
+			isectPoints->setValue(p, 5);
+			p = it.getPosition(2);
+			m.mult(p, p);
+			isectPoints->setValue(p, 6);
+		}
+		else
+		{
+			std::cout << "nothing was hit" << std::endl;
+			// no, get rid of the triangle and highlight.
+			isectPoints->setValue(Pnt3f(0, 0, 0), 2);
+			isectPoints->setValue(Pnt3f(0, 0, 0), 3);
+			isectPoints->setValue(Pnt3f(0, 0, 0), 4);
+
+		}
+
+		// free the action
+		act = nullptr;
+
+		std::cout << std::endl;
+
+		glutPostRedisplay();
+	}
 }
 
 void InitTracker(OSGCSM::CAVEConfig &cfg)
@@ -164,8 +274,6 @@ void mouse(int button, int state, int x, int y)
 	std::cout << "speed: " << speed << std::endl;
 }
 
-GeoPnt3fPropertyRefPtr isectPoints;
-
 void keyboard(unsigned char k, int x, int y)
 {
 	Real32 ed;
@@ -179,7 +287,8 @@ void keyboard(unsigned char k, int x, int y)
 			break;
 		case 'w':
 			wand_orientation.getEulerAngleDeg(wandRotation);
-			wand_orientation.setValueAsAxisDeg(Vec3f(0, 1, 0), wandRotation.y() + 1);
+			wand_orientation.setValueAsAxisDeg(Vec3f(1, 0, 0), wandRotation.x() + 1);
+			game->UpdateWand(Vec3f(0,0,0), wand_orientation);
 			print_tracker();
 			break;
 		case 'e':
@@ -199,111 +308,7 @@ void keyboard(unsigned char k, int x, int y)
 		case 'i':
 			print_tracker();
 			break;
-		case ' ':   // send a ray through the clicked pixel
-					/*
-					Intersection testing for rays is done using an
-					IntersectAction. The ray itself is calculated by the
-					SimpleSceneManager, given the clicked pixel.
-
-					It needs to be set up with the line that is to be
-					intersected. A line is a semi-infinite ray which has a
-					starting point and a direction, and extends in the
-					direction to infinity.
-
-					To do the actual test the Action's apply() method is used.
-
-					The results can be received from the Action. The main
-					difference is if something was hit or not, which is
-					returned in didHit().
-
-					If an intersection did occur, the other data elements are
-					valid, otherwise they are undefined.
-
-					The information that is stored in the action is the object
-					which was hit, the triangle of the object that was hit (in
-					the form of its index) and the actual hit position.
-					*/
-		{
-			Line l;
-
-			// TODO: set line which matches wand orientation
-			// point 1 is the position of the wand
-			// point 2 is the position+direction of the wand
-			Vec3f point2;
-			wand_orientation.multVec(Vec3f(0, 0, 1), point2);
-			point2 += wand_position;
-			l.setValue(wand_position, point2);
-
-			std::cout << "From " << l.getPosition()
-				<< ", dir " << l.getDirection() << std::endl;
-
-			IntersectActionRefPtr act = IntersectAction::create();
-
-			act->setLine(l);
-			act->apply(game->GetRootNode().get());
-
-			isectPoints->setValue(l.getPosition(), 0);
-			isectPoints->setValue(l.getPosition() + l.getDirection(), 1);
-
-
-			// did we hit something?
-			if (act->didHit())
-			{
-				std::cout << "something was hit" << std::endl;
-				// yes!! print and highlight it
-				std::cout << " object " << act->getHitObject()
-					<< " tri " << act->getHitTriangle()
-					<< " at " << act->getHitPoint();
-
-				act->getHitObject();
-
-				// stop the ray on the hit surface
-				Pnt3f is = l.getPosition() +
-					l.getDirection() * act->getHitT();
-
-				isectPoints->setValue(is, 1);
-
-				// find the triangle that was hit
-				TriangleIterator it(act->getHitObject());
-				it.seek(act->getHitTriangle());
-
-				// Draw its normal at the intersection point
-				isectPoints->setValue(is, 2);
-				isectPoints->setValue(is + act->getHitNormal() * 5, 3);
-
-
-				// calculate its vertex positions in world space
-				Matrix m;
-				act->getHitObject()->getToWorld(m);
-
-				// and turn them into a triangle
-				Pnt3f p = it.getPosition(0);
-				m.mult(p, p);
-				isectPoints->setValue(p, 4);
-				p = it.getPosition(1);
-				m.mult(p, p);
-				isectPoints->setValue(p, 5);
-				p = it.getPosition(2);
-				m.mult(p, p);
-				isectPoints->setValue(p, 6);
-			}
-			else
-			{
-				std::cout << "nothing was hit" << std::endl;
-				// no, get rid of the triangle and highlight.
-				isectPoints->setValue(Pnt3f(0, 0, 0), 2);
-				isectPoints->setValue(Pnt3f(0, 0, 0), 3);
-				isectPoints->setValue(Pnt3f(0, 0, 0), 4);
-
-			}
-
-			// free the action
-			act = nullptr;
-
-			std::cout << std::endl;
-
-			glutPostRedisplay();
-		}
+		case ' ': 
 		break;
 		default:
 			std::cout << "Key '" << k << "' ignored\n";

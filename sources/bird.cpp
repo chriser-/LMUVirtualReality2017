@@ -76,21 +76,21 @@ void Bird::Update()
 		{
 			newYDirection = -1;
 		}
-		else if(yPosition < 0)
+		else if(yPosition < 100)
 		{
 			newYDirection = 1;
 		}
-		std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
+		//std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
 		m_direction.setValues(newXDirection, newYDirection, newZDirection);
 
 		// update sprite to match velocity
 		std::string newSprite = VELOCITY_TO_SPRITE[int(newXDirection) +1][int(newYDirection) +1];
-		std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
+		//std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
 		m_BirdSprite->UpdateCurrentSprite(newSprite);
 
 		// translate into velocity direction with speed
-                Translate(m_direction * m_speed * MyTime::DeltaTime);
-		std::cout << "Position is (" << m_Transform->getTranslation().x() << "," << m_Transform->getTranslation().y() << ")" << std::endl;
+        Translate(m_direction * m_speed * MyTime::DeltaTime);
+		//std::cout << "Position is (" << m_Transform->getTranslation().x() << "," << m_Transform->getTranslation().y() << ")" << std::endl;
 	}
 }
 
