@@ -12,10 +12,10 @@ private:
 	boost::unordered_set<GameObject*> m_behaviors;
 	std::unordered_map<std::string, SpriteAtlas*> m_SpriteAtlasses;
 	OSG::GroupNodeRefPtr m_root;
-	ComponentTransformNodeRefPtr m_debugWand;
 	Skybox m_skybox;
 	static Game* m_gameInstance;
 public:
+	ComponentTransformNodeRefPtr m_debugWand;
 	Game();
     void Update();
 	void UpdateWand(Vec3f position, Quaternion orientation) const;

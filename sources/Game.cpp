@@ -11,6 +11,7 @@
 OSG_USING_STD_NAMESPACE
 OSG_USING_NAMESPACE
 
+
 void Game::AddBehavior(GameObject* behavior)
 {
 	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << std::endl;
@@ -108,7 +109,7 @@ Game::Game()
 	// debug wand display
 	m_debugWand = ComponentTransformNodeRefPtr::create();
 	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
-	wandChild.core()->setTranslation(Vec3f(0, -250, 0));
+	wandChild->setRotation(Quaternion(Vec3f(1, 0, 0), osgDegree2Rad(-90)));
 	GeometryNodeRefPtr wandGeo = GeometryNodeRefPtr::create();
 	wandGeo.node()->setCore(makeCylinderGeo(500, 3, 100, true, true, true).get());
 	wandChild.node()->addChild(wandGeo);

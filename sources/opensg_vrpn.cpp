@@ -71,13 +71,14 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 
 Quaternion wand_orientation = Quaternion(Vec3f(0,0,0), 0);
 Vec3f wand_position = Vec3f(0.f, 150.f, 170.f);
+void moveObjectWithWand(NodeTransitPtr);
 void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
 	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
 	wand_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
 	if(game != nullptr)
 	{
-		game->UpdateWand(wand_position, wand_orientation);
+		moveObjectWithWand(NodeTransitPtr(game->m_debugWand.node()));
 	}
 }
 
@@ -124,7 +125,7 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 		// point 1 is the position of the wand
 		// point 2 is the position+direction of the wand
 		Vec3f point2;
-		wand_orientation.multVec(Vec3f(0, 0, 1), point2);
+		wand_orientation.multVec(Vec3f(0, 0, -1), point2);
 		point2 *= 5000; // length of 5000
 		point2 += wand_position;
 		l.setValue(wand_position, point2);
@@ -206,6 +207,55 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 
 		glutPostRedisplay();
 	}
+}
+
+
+/*
+* By Tobias Weiher
+*/
+
+Vec3f moveObjectWithWandTranslateOnly()
+{
+	Vec3f caveTrans = mgr->getTranslation();
+	Real32 caveRot = mgr->getYRotate();
+
+	Vec3f realWandTrans, virtualWandTrans;
+
+	realWandTrans = wand_position;								// get vector of CAVEs Real Origin to Wand Real Position
+	Quaternion rotWandRtoV = Quaternion(Vec3f(0, 1, 0), caveRot);	// rotate Wand around CAVE origin with amount of CAVEs orientation
+	rotWandRtoV.multVec(realWandTrans, virtualWandTrans); 		// Real Wand now rotated into Virtual Space, offset to CAVE still required
+	virtualWandTrans += caveTrans;								// added Offset, so that Wand is in CAVEs Virtual Space
+
+	return virtualWandTrans;
+}
+
+Quaternion moveObjectWithWandRotateOnly()
+{
+	Quaternion realWandRot, virtualWandRot;
+	Real32 caveRot = mgr->getYRotate();
+
+	realWandRot = wand_orientation;								// get current Real Space Wand orientation
+	virtualWandRot = Quaternion(Vec3f(0, 1, 0), caveRot);			// get the needed rotation of the CAVE in Virtual Space
+	virtualWandRot.mult(realWandRot);							// rotate Wand finally into CAVEs Virtual Space Orientation
+
+	return virtualWandRot;
+}
+
+void moveObjectWithWand(NodeTransitPtr componentTransformNode)
+{
+	if (nullptr || !componentTransformNode->getCore()->getType().isDerivedFrom(ComponentTransform::getClassType()))
+	{
+		std::cout << "No ComponentTransformCore found!" << std::endl;
+		return;
+	}
+
+	ComponentTransformRecPtr trans = dynamic_cast<ComponentTransform*>(componentTransformNode->getCore());
+
+	Vec3f virtualWandTrans = moveObjectWithWandTranslateOnly();
+	Quaternion virtualWandRot = moveObjectWithWandRotateOnly();
+
+	trans->setTranslation(virtualWandTrans);
+	trans->setRotation(virtualWandRot);
 }
 
 void InitTracker(OSGCSM::CAVEConfig &cfg)
