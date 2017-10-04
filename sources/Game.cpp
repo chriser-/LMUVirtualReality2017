@@ -14,8 +14,8 @@ OSG_USING_NAMESPACE
 
 void Game::AddBehavior(GameObject* behavior)
 {
-	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << std::endl;
-	m_behaviors.insert(behavior);
+	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << " (node: " << reinterpret_cast<size_t>(behavior->GetTransform().node()) << ")" << std::endl;
+	m_behaviors[reinterpret_cast<size_t>(behavior->GetTransform().node())] = behavior;
 	// add behavior to root node
 	m_root.node()->addChild(behavior->GetTransform().node());
 }
@@ -23,9 +23,19 @@ void Game::AddBehavior(GameObject* behavior)
 void Game::RemoveBehavior(GameObject* behavior)
 {
 	std::cout << "Removing Behavior " << GameObject::hash_value(*behavior) << std::endl;
-	m_behaviors.erase(behavior);
+	m_behaviors.erase(reinterpret_cast<size_t>(behavior->GetTransform().node()));
 	const NodeRecPtr nodeToDelete = behavior->GetTransform().node();
 	m_root.node()->subChild(nodeToDelete);
+}
+
+GameObject* Game::GetBehavior(NodeRecPtr fromNode)
+{
+	const auto iter = m_behaviors.find(reinterpret_cast<size_t>(&fromNode));
+	if(iter != m_behaviors.end())
+	{
+		return iter->second;
+	}
+	return nullptr;
 }
 
 SpriteAtlas* Game::GetSpriteAtlas(std::string spriteAtlasName)
@@ -53,7 +63,7 @@ Game::Game()
 		Vec3f Position;
 	};
 	BirdPosInfo birds[] = {
-		{"Bird 1", "DuckBlue", Vec3f(0,100,-10)},
+		{"Bird 1", "DuckBlue", Vec3f(0, 100, -10)},
 		//{"Bird 2", "DuckBlue", Vec3f(0,100,-10)},
 		//{"Bird 3", "DuckBlue", Vec3f(0,100,-10)},
 	};
@@ -74,9 +84,7 @@ Game::Game()
 
 	// skybox
 	User* localUser = UserDatabase::getLocalUser();
-	std::cout << "local user " << localUser << std::endl;
 	CameraTransformation* camera = localUser->getCamera();
-	std::cout << "camera " << camera << std::endl;
 
 	std::string skyPath = "skybox/";
 	m_skybox.init(5, 5, 5, 1000, (skyPath + "lostatseaday/lostatseaday_dn.jpg").c_str(),
@@ -111,7 +119,7 @@ Game::Game()
 	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
 	wandChild->setRotation(Quaternion(Vec3f(1, 0, 0), osgDegree2Rad(-90)));
 	GeometryNodeRefPtr wandGeo = GeometryNodeRefPtr::create();
-	wandGeo.node()->setCore(makeCylinderGeo(500, 3, 100, true, true, true).get());
+	wandGeo.node()->setCore(makeCylinderGeo(500, 2, 100, true, true, true).get());
 	wandChild.node()->addChild(wandGeo);
 	m_debugWand.node()->addChild(wandChild);
 	m_root.node()->addChild(m_debugWand);
@@ -122,13 +130,13 @@ void Game::Update()
 	// Update all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		behavior->Update();
+		behavior.second->Update();
 	}
 }
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	m_debugWand->setTranslation(Vec3f(position.x(), position.y()+250, position.z()));
+	m_debugWand->setTranslation(Vec3f(position.x(), position.y(), position.z()));
 	m_debugWand->setRotation(orientation);
 }
 
@@ -137,7 +145,7 @@ Game::~Game()
 	// Delete all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		delete behavior;
+		delete behavior.second;
 	}
 }
 

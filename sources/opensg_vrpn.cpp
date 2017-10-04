@@ -88,36 +88,11 @@ void VRPN_CALLBACK callback_analog(void* userData, const vrpn_ANALOGCB analog)
 	if (analog.num_channel >= 2)
 		analog_values = Vec3f(analog.channel[0], 0, -analog.channel[1]);
 }
-GeoPnt3fPropertyRefPtr isectPoints;
 void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 {
-	if (button.button == 0 && button.state == 1)
-		print_tracker();
-	std::cout << "button: " << button.button << " state: " << button.state << std::endl;
-	// send a ray through the clicked pixel
-	/*
-	Intersection testing for rays is done using an
-	IntersectAction. The ray itself is calculated by the
-	SimpleSceneManager, given the clicked pixel.
+	//if (button.button == 0 && button.state == 1)
+	//	print_tracker();
 
-	It needs to be set up with the line that is to be
-	intersected. A line is a semi-infinite ray which has a
-	starting point and a direction, and extends in the
-	direction to infinity.
-
-	To do the actual test the Action's apply() method is used.
-
-	The results can be received from the Action. The main
-	difference is if something was hit or not, which is
-	returned in didHit().
-
-	If an intersection did occur, the other data elements are
-	valid, otherwise they are undefined.
-
-	The information that is stored in the action is the object
-	which was hit, the triangle of the object that was hit (in
-	the form of its index) and the actual hit position.
-	*/
 	if (button.button == 0 && button.state == 1)
 	{
 		Line l;
@@ -138,72 +113,40 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 		act->setLine(l);
 		act->apply(game->GetRootNode().get());
 
-		isectPoints->setValue(l.getPosition(), 0);
-		isectPoints->setValue(l.getPosition() + l.getDirection(), 1);
-
-
 		// did we hit something?
 		if (act->didHit())
 		{
 			std::cout << "something was hit" << std::endl;
 			std::string hitNodeName = "N/A";
-			if(getName(act->getHitObject()->getParent()))
+			NodeRecPtr hitNode = act->getHitObject();
+			while (hitNode != nullptr) 
 			{
-				hitNodeName = getName(act->getHitObject()->getParent());
+				if(getName(hitNode))
+				{
+					hitNodeName = getName(hitNode);
+				}
+				GameObject* hitObject = game->GetBehavior(hitNode);
+				std::cout << " object " << hitNode
+					<< " type " << hitNode->getTypeName()
+					<< " name " << hitNodeName << std::endl;
+				if (hitObject == nullptr)
+				{
+					hitNode = hitNode->getParent();
+				}
+				else
+				{
+					hitObject->OnHit();
+					break;
+				}
 			}
-			// yes!! print and highlight it
-			std::cout << " object " << act->getHitObject()->getParent()
-				<< " type " << act->getHitObject()->getParent()->getCore()->getTypeName()
-				<< " name " << hitNodeName
-				<< " tri " << act->getHitTriangle()
-				<< " at " << act->getHitPoint();
-
-			act->getHitObject();
-
-			// stop the ray on the hit surface
-			Pnt3f is = l.getPosition() +
-				l.getDirection() * act->getHitT();
-
-			isectPoints->setValue(is, 1);
-
-			// find the triangle that was hit
-			TriangleIterator it(act->getHitObject());
-			it.seek(act->getHitTriangle());
-
-			// Draw its normal at the intersection point
-			isectPoints->setValue(is, 2);
-			isectPoints->setValue(is + act->getHitNormal() * 5, 3);
-
-
-			// calculate its vertex positions in world space
-			Matrix m;
-			act->getHitObject()->getToWorld(m);
-
-			// and turn them into a triangle
-			Pnt3f p = it.getPosition(0);
-			m.mult(p, p);
-			isectPoints->setValue(p, 4);
-			p = it.getPosition(1);
-			m.mult(p, p);
-			isectPoints->setValue(p, 5);
-			p = it.getPosition(2);
-			m.mult(p, p);
-			isectPoints->setValue(p, 6);
 		}
 		else
 		{
 			std::cout << "nothing was hit" << std::endl;
-			// no, get rid of the triangle and highlight.
-			isectPoints->setValue(Pnt3f(0, 0, 0), 2);
-			isectPoints->setValue(Pnt3f(0, 0, 0), 3);
-			isectPoints->setValue(Pnt3f(0, 0, 0), 4);
-
 		}
 
 		// free the action
 		act = nullptr;
-
-		std::cout << std::endl;
 
 		glutPostRedisplay();
 	}
@@ -243,7 +186,7 @@ Quaternion moveObjectWithWandRotateOnly()
 
 void moveObjectWithWand(NodeTransitPtr componentTransformNode)
 {
-	if (nullptr || !componentTransformNode->getCore()->getType().isDerivedFrom(ComponentTransform::getClassType()))
+	if (!componentTransformNode->getCore()->getType().isDerivedFrom(ComponentTransform::getClassType()))
 	{
 		std::cout << "No ComponentTransformCore found!" << std::endl;
 		return;
@@ -413,10 +356,8 @@ void setupGLUT(int *argc, char *argv[])
 	glutIdleFunc([]()
 	{
 		check_tracker();
-		const auto speed = 1.f;
-		mgr->setUserTransform(head_position, head_orientation);
-		mgr->setTranslation(mgr->getTranslation() + speed * analog_values);
 		commitChanges();
+		mgr->setUserTransform(head_position, head_orientation);
 		mgr->redraw();
 		// the changelist should be cleared - else things could be copied multiple times
 		OSG::Thread::getCurrentChangeList()->clear();
@@ -513,13 +454,6 @@ int main(int argc, char **argv)
 			printf("'final/config/general.xml' config file, e.g.:\n");
 			printf("<path name=\"Plugins\" path=\"/home/guest/inVRs/lib\"/>\n");
 		}
-
-		isectPoints = OSG::GeoPnt3fProperty::create();
-		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
-		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
-		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
-		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
-		isectPoints->addValue(OSG::Pnt3f(0, 0, 0));
 
 		if (!game) {
 			game = new Game();

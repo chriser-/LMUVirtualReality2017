@@ -29,6 +29,7 @@ public:
 	void AddChild(GameObject* other);
 	void AddComponent(Component* component);
 	void RemoveComponent(Component* component);
+	virtual void OnHit();
 	static size_t hash_value(const GameObject& a);
 	OSG::ComponentTransformNodeRefPtr GetTransform() const;
 	std::string GetName() const;

@@ -18,5 +18,6 @@ public:
 	void Update() override;
 	void SetSpeed(float speed);
 	void SetSprite(Sprite* sprite);
+	void OnHit() override;
 	~Bird() override;
 };

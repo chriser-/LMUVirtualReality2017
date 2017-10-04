@@ -1,7 +1,7 @@
 ﻿#pragma once
 #include <OSGNode.h>
 #include "GameObject.h"
-#include <boost/unordered_set.hpp>
+#include <boost/unordered_map.hpp>
 #include "SpriteAtlas.h"
 #include <OSGGroup.h>
 #include <inVRs/tools/libraries/Skybox/Skybox.h>
@@ -9,7 +9,7 @@
 class Game
 {
 private:
-	boost::unordered_set<GameObject*> m_behaviors;
+	boost::unordered_map<size_t, GameObject*> m_behaviors;
 	std::unordered_map<std::string, SpriteAtlas*> m_SpriteAtlasses;
 	OSG::GroupNodeRefPtr m_root;
 	Skybox m_skybox;
@@ -25,5 +25,6 @@ public:
 	static Game* Instance();
 	void AddBehavior(GameObject* behavior);
 	void RemoveBehavior(GameObject* behavior);
+	GameObject* GetBehavior(NodeRecPtr fromNode);
 	SpriteAtlas* GetSpriteAtlas(std::string spriteAtlasName);
 };

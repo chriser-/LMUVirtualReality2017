@@ -105,6 +105,11 @@ void Bird::SetSprite(Sprite* sprite)
 	AddComponent(m_BirdSprite);
 }
 
+void Bird::OnHit()
+{
+	std::cout << "Bird was hit!" << std::endl;
+}
+
 Bird::~Bird()
 {
 	

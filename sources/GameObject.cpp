@@ -81,6 +81,10 @@ void GameObject::RemoveComponent(Component* component)
 	m_Components.erase(component);
 }
 
+void GameObject::OnHit()
+{
+}
+
 size_t GameObject::hash_value(const GameObject& a)
 {
 	const size_t hash = reinterpret_cast<size_t>(&a);
