@@ -30,8 +30,7 @@ void Game::AddBehavior(GameObject* behavior)
 
 void Game::RemoveBehavior(GameObject* behavior)
 {
-	std::cout << "Removing Behavior " << GameObject::hash_value(*behavior) << std::endl;
-	m_behaviors.erase(behavior->GetTransform().node());
+	std::cout << "Removing Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ")" << std::endl;
 	const NodeRecPtr nodeToDelete = behavior->GetTransform().node();
 	if (behavior->GetName() == "Bird")
 	{
@@ -41,6 +40,7 @@ void Game::RemoveBehavior(GameObject* behavior)
 	{
 		m_root.node()->subChild(nodeToDelete);
 	}
+	m_behaviors.erase(behavior->GetTransform().node());
 }
 
 GameObject* Game::GetBehavior(NodeRecPtr fromNode)
@@ -119,8 +119,8 @@ Game::Game()
 	// trees
 	GameObject* tree = new GameObject("Tree");
 	tree->GetTransform()->setTranslation(Vec3f(0, 0, -99));
-	//tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
-	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects", -2);
+	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
+	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects");
 	tree->AddComponent(treeSprite);
 	Vec2f dimensions = treeSprite->GetDimensions();
 	tree->Translate(Vec3f(0, dimensions.y()/2, 0));
@@ -128,8 +128,8 @@ Game::Game()
 	// grass
 	GameObject* grass = new GameObject("Grass");
 	grass->GetTransform()->setTranslation(Vec3f(0, 0, -101));
-	//grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
-	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects", -1);
+	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
+	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects");
 	grass->AddComponent(grassSprite);
 	dimensions = grassSprite->GetDimensions();
 	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
@@ -167,7 +167,7 @@ Game::~Game()
 	// Delete all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		delete behavior.second;
+		RemoveBehavior(behavior.second);
 	}
 }
 

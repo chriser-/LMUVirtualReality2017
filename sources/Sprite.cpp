@@ -45,7 +45,6 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas,
 
 void Sprite::SetSprite(std::string key, int frame)
 {
-	std::cout << "Set sprite to " << key << " frame " << frame << std::endl;
 	const std::string spriteName = m_SpriteAtlas->GetSpriteName(m_Name, key, frame);
 	const auto iter = m_SpriteIdToIndexMap.find(spriteName);
 	if (iter != m_SpriteIdToIndexMap.end())
