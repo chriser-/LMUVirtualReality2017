@@ -127,7 +127,7 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 				}
 				GameObject* hitObject = game->GetBehavior(hitNode);
 				std::cout << " object " << hitNode
-					<< " type " << hitNode->getTypeName()
+					<< " type " << hitNode->getCore()->getTypeName()
 					<< " name " << hitNodeName
 					<< " pos " << act->getHitPoint()
 					<< std::endl;
