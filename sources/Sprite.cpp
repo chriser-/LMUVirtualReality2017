@@ -11,7 +11,7 @@ Sprite::Sprite(NodeRecPtr parentNode, std::string name, std::string spriteAtlas,
 {
 	m_Name = name;
 	m_SpriteAtlas = Game::Instance()->GetSpriteAtlas(spriteAtlas);
-        m_SpriteSwitcher = OSG::SwitchNodeRefPtr::create();
+	m_SpriteSwitcher = OSG::SwitchNodeRefPtr::create();
 	m_Node = m_SpriteSwitcher;
 	std::cout << "Adding sprite switcher (" << m_SpriteSwitcher.node() << " to node " << parentNode << std::endl;
 	parentNode->addChild(m_SpriteSwitcher);

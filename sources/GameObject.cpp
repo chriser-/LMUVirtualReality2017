@@ -3,6 +3,7 @@
 #include <OSGSimpleGeometry.h>
 #include <OSGComponentTransform.h>
 #include <OSGGroup.h>
+#include <OSGNameAttachment.h>
 
 GameObject::~GameObject()
 {
@@ -20,8 +21,9 @@ GameObject::~GameObject()
 void GameObject::ctor(std::string name, OSG::ComponentTransformNodeRefPtr root)
 {
 	m_Name = name;
+	setName(root.node(), name);
 	m_Transform = root;
-        m_Group = OSG::GroupNodeRefPtr::create();
+	m_Group = OSG::GroupNodeRefPtr::create();
 	m_Transform.node()->addChild(m_Group);
 	Game::Instance()->AddBehavior(this);
 }

@@ -4,6 +4,7 @@
 #include <OSGComponentTransformBase.h>
 #include <OpenSG/OSGSceneGraphUtils.h>  // header for SceneGraphPrinter
 #include <OSGSimpleGeometry.h>
+#include <OSGNameAttachment.h>
 #include <inVRs/SystemCore/UserDatabase/UserDatabase.h>
 
 
@@ -43,6 +44,7 @@ Game::Game()
 {
 	m_gameInstance = this;
 	m_root = GroupNodeRefPtr::create();
+	setName(m_root.node(), "Root");
 	struct BirdPosInfo
 	{
 		std::string Name;
@@ -59,7 +61,7 @@ Game::Game()
 		//std::cout << "Creating " << bird.Name << std::endl;
 		Bird* b = new Bird(bird.Name, bird.SpriteName);
 		b->GetTransform()->setTranslation(bird.Position);
-		b->SetSpeed(30);
+		b->SetSpeed(0);
 	}
 
 	// floor
@@ -105,10 +107,12 @@ Game::Game()
 
 	// debug wand display
 	m_debugWand = ComponentTransformNodeRefPtr::create();
-	m_debugWand->setScale(Vec3f(1, 1, 1));
+	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
+	wandChild.core()->setTranslation(Vec3f(0, -250, 0));
 	GeometryNodeRefPtr wandGeo = GeometryNodeRefPtr::create();
-	wandGeo.node()->setCore(makeCylinderGeo(5000, 3, 100, true, true, true).get());
-	m_debugWand.node()->addChild(wandGeo);
+	wandGeo.node()->setCore(makeCylinderGeo(500, 3, 100, true, true, true).get());
+	wandChild.node()->addChild(wandGeo);
+	m_debugWand.node()->addChild(wandChild);
 	m_root.node()->addChild(m_debugWand);
 }
 
@@ -123,7 +127,7 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	m_debugWand->setTranslation(position);
+	m_debugWand->setTranslation(Vec3f(position.x(), position.y()+250, position.z()));
 	m_debugWand->setRotation(orientation);
 }
 

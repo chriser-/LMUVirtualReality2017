@@ -16,6 +16,7 @@
 #include <OpenSG/OSGAction.h>
 #include <OpenSG/OSGIntersectAction.h>
 #include <OpenSG/OSGTriangleIterator.h>
+#include <OpenSG/OSGNameAttachment.h>
 
 #include <OSGCSM/OSGCAVESceneManager.h>
 #include <OSGCSM/OSGCAVEConfig.h>
@@ -69,7 +70,7 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 }
 
 Quaternion wand_orientation = Quaternion(Vec3f(0,0,0), 0);
-Vec3f wand_position = Vec3f(0.f, 150.f, 200.f); // wand at 1.5m, 2m in fron of the scene
+Vec3f wand_position = Vec3f(0.f, 150.f, 170.f);
 void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
 	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
@@ -124,6 +125,7 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 		// point 2 is the position+direction of the wand
 		Vec3f point2;
 		wand_orientation.multVec(Vec3f(0, 0, 1), point2);
+		point2 *= 5000; // length of 5000
 		point2 += wand_position;
 		l.setValue(wand_position, point2);
 
@@ -143,8 +145,15 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 		if (act->didHit())
 		{
 			std::cout << "something was hit" << std::endl;
+			std::string hitNodeName = "N/A";
+			if(getName(act->getHitObject()->getParent()))
+			{
+				hitNodeName = getName(act->getHitObject()->getParent());
+			}
 			// yes!! print and highlight it
-			std::cout << " object " << act->getHitObject()
+			std::cout << " object " << act->getHitObject()->getParent()
+				<< " type " << act->getHitObject()->getParent()->getCore()->getTypeName()
+				<< " name " << hitNodeName
 				<< " tri " << act->getHitTriangle()
 				<< " at " << act->getHitPoint();
 
@@ -288,7 +297,13 @@ void keyboard(unsigned char k, int x, int y)
 		case 'w':
 			wand_orientation.getEulerAngleDeg(wandRotation);
 			wand_orientation.setValueAsAxisDeg(Vec3f(1, 0, 0), wandRotation.x() + 1);
-			game->UpdateWand(Vec3f(0,0,0), wand_orientation);
+			game->UpdateWand(wand_position, wand_orientation);
+			print_tracker();
+			break;
+		case 's':
+			wand_orientation.getEulerAngleDeg(wandRotation);
+			wand_orientation.setValueAsAxisDeg(Vec3f(1, 0, 0), wandRotation.x() - 1);
+			game->UpdateWand(wand_position, wand_orientation);
 			print_tracker();
 			break;
 		case 'e':
@@ -308,7 +323,11 @@ void keyboard(unsigned char k, int x, int y)
 		case 'i':
 			print_tracker();
 			break;
-		case ' ': 
+		case ' ':
+			vrpn_BUTTONCB button;
+			button.button = 0;
+			button.state = 1;
+			callback_button(nullptr, button);
 		break;
 		default:
 			std::cout << "Key '" << k << "' ignored\n";
