@@ -14,8 +14,8 @@ OSG_USING_NAMESPACE
 
 void Game::AddBehavior(GameObject* behavior)
 {
-	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << " (node: " << reinterpret_cast<size_t>(behavior->GetTransform().node()) << ")" << std::endl;
-	m_behaviors[reinterpret_cast<size_t>(behavior->GetTransform().node())] = behavior;
+	std::cout << "Adding Behavior " << GameObject::hash_value(*behavior) << " (node: " << behavior->GetTransform().node() << ")" << std::endl;
+	m_behaviors[behavior->GetTransform().node()] = behavior;
 	// add behavior to root node
 	m_root.node()->addChild(behavior->GetTransform().node());
 }
@@ -23,14 +23,14 @@ void Game::AddBehavior(GameObject* behavior)
 void Game::RemoveBehavior(GameObject* behavior)
 {
 	std::cout << "Removing Behavior " << GameObject::hash_value(*behavior) << std::endl;
-	m_behaviors.erase(reinterpret_cast<size_t>(behavior->GetTransform().node()));
+	m_behaviors.erase(behavior->GetTransform().node());
 	const NodeRecPtr nodeToDelete = behavior->GetTransform().node();
 	m_root.node()->subChild(nodeToDelete);
 }
 
 GameObject* Game::GetBehavior(NodeRecPtr fromNode)
 {
-	const auto iter = m_behaviors.find(reinterpret_cast<size_t>(&fromNode));
+	const auto iter = m_behaviors.find(fromNode);
 	if(iter != m_behaviors.end())
 	{
 		return iter->second;
@@ -63,7 +63,7 @@ Game::Game()
 		Vec3f Position;
 	};
 	BirdPosInfo birds[] = {
-		{"Bird 1", "DuckBlue", Vec3f(0, 100, -10)},
+		{"Bird 1", "DuckBlue", Vec3f(0, 100, 100)},
 		//{"Bird 2", "DuckBlue", Vec3f(0,100,-10)},
 		//{"Bird 3", "DuckBlue", Vec3f(0,100,-10)},
 	};
@@ -98,7 +98,7 @@ Game::Game()
 
 	// trees
 	GameObject* tree = new GameObject("Tree");
-	tree->GetTransform()->setTranslation(Vec3f(0, 0, -10));
+	tree->GetTransform()->setTranslation(Vec3f(0, 0, 101));
 	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
 	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects", -2);
 	tree->AddComponent(treeSprite);
@@ -107,7 +107,7 @@ Game::Game()
 
 	// grass
 	GameObject* grass = new GameObject("Grass");
-	grass->GetTransform()->setTranslation(Vec3f(0, 0, -10));
+	grass->GetTransform()->setTranslation(Vec3f(0, 0, 99));
 	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
 	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects", -1);
 	grass->AddComponent(grassSprite);

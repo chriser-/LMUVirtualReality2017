@@ -9,7 +9,7 @@
 class Game
 {
 private:
-	boost::unordered_map<size_t, GameObject*> m_behaviors;
+	boost::unordered_map<Node*, GameObject*> m_behaviors;
 	std::unordered_map<std::string, SpriteAtlas*> m_SpriteAtlasses;
 	OSG::GroupNodeRefPtr m_root;
 	Skybox m_skybox;

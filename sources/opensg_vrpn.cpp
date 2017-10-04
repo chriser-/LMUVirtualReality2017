@@ -61,7 +61,7 @@ T scale_tracker2cm(const T& value)
 }
 
 Quaternion head_orientation = Quaternion(Vec3f(0.f, 1.f, 0.f), 3.141f);
-Vec3f head_position = Vec3f(0.f, 170.f, 200.f);	// a 1.7m Person 2m in front of the scene
+Vec3f head_position = Vec3f(0.f, 170.f, 0);	// a 1.7m Person 2m in front of the scene
 
 void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
@@ -70,7 +70,7 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 }
 
 Quaternion wand_orientation = Quaternion(Vec3f(0,0,0), 0);
-Vec3f wand_position = Vec3f(0.f, 150.f, 170.f);
+Vec3f wand_position = Vec3f(0.f, 150.f, 0);
 void moveObjectWithWand(NodeTransitPtr);
 void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
@@ -119,7 +119,7 @@ void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
 			std::cout << "something was hit" << std::endl;
 			std::string hitNodeName = "N/A";
 			NodeRecPtr hitNode = act->getHitObject();
-			while (hitNode != nullptr) 
+			while (hitNode != nullptr)
 			{
 				if(getName(hitNode))
 				{
