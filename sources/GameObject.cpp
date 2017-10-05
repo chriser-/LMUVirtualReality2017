@@ -96,7 +96,7 @@ std::string GameObject::GetName() const
 	return m_Name;
 }
 
-ComponentTransformNodeRefPtr GameObject::GetTransform() const
+OSG::ComponentTransformNodeRefPtr GameObject::GetTransform() const
 {
 	return m_Transform;
 }

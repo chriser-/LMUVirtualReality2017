@@ -13,6 +13,10 @@ high_resolution_clock::time_point MyTime::lastUpdateTimepoint = high_resolution_
 void MyTime::UpdateDeltaTime()
 {
 	double deltaTime = duration_cast<duration<double>>(high_resolution_clock::now() - lastUpdateTimepoint).count();
+	//if(deltaTime > (1000.f/15.f/1000.f)) // frame took longer than 15fps
+	//{
+	//	std::cout << "Frame took " << deltaTime << "!" << std::endl;
+	//}
 	DeltaTime = deltaTime * TimeScale;
 	UnscaledDeltaTime = deltaTime;
 	RealtimeSinceStartup += deltaTime;

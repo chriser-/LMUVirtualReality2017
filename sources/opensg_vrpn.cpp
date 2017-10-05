@@ -61,7 +61,7 @@ T scale_tracker2cm(const T& value)
 }
 
 Quaternion head_orientation = Quaternion(Vec3f(0.f, 1.f, 0.f), 3.141f);
-Vec3f head_position = Vec3f(0.f, 170.f, 0);	// a 1.7m Person 2m in front of the scene
+Vec3f head_position = Vec3f(0.f, 170.f, 200.f);	// a 1.7m Person 2m in front of the scene
 
 void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
@@ -69,91 +69,8 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 	head_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
 }
 
-Quaternion wand_orientation = Quaternion(Vec3f(0,0,0), 0);
-Vec3f wand_position = Vec3f(0.f, 150.f, 0);
-void moveObjectWithWand(NodeTransitPtr);
-void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
-{
-	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
-	wand_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
-	if(game != nullptr)
-	{
-		moveObjectWithWand(NodeTransitPtr(game->m_debugWand.node()));
-	}
-}
-
-auto analog_values = Vec3f();
-void VRPN_CALLBACK callback_analog(void* userData, const vrpn_ANALOGCB analog)
-{
-	if (analog.num_channel >= 2)
-		analog_values = Vec3f(analog.channel[0], 0, -analog.channel[1]);
-}
-void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
-{
-	//if (button.button == 0 && button.state == 1)
-	//	print_tracker();
-
-	if (button.button == 0 && button.state == 1)
-	{
-		Line l;
-
-		// point 1 is the position of the wand
-		// point 2 is the position+direction of the wand
-		Vec3f point2;
-		wand_orientation.multVec(Vec3f(0, 0, -1), point2);
-		point2 *= 5000; // length of 5000
-		point2 += wand_position;
-		l.setValue(wand_position, point2);
-
-		std::cout << "From " << l.getPosition()
-			<< ", dir " << l.getDirection() << std::endl;
-
-		IntersectActionRefPtr act = IntersectAction::create();
-
-		act->setLine(l);
-		act->apply(game->GetRootNode()->getChild(0));
-
-		// did we hit something?
-		if (act->didHit())
-		{
-			std::cout << "something was hit" << std::endl;
-			std::string hitNodeName = "N/A";
-			NodeRecPtr hitNode = act->getHitObject();
-			while (hitNode != nullptr)
-			{
-				if(getName(hitNode))
-				{
-					hitNodeName = getName(hitNode);
-				}
-				GameObject* hitObject = game->GetBehavior(hitNode);
-				std::cout << " object " << hitNode
-					<< " type " << hitNode->getCore()->getTypeName()
-					<< " name " << hitNodeName
-					<< " pos " << act->getHitPoint()
-					<< std::endl;
-				if (hitObject == nullptr)
-				{
-					hitNode = hitNode->getParent();
-				}
-				else
-				{
-					hitObject->OnHit();
-					break;
-				}
-			}
-		}
-		else
-		{
-			std::cout << "nothing was hit" << std::endl;
-		}
-
-		// free the action
-		act = nullptr;
-
-		glutPostRedisplay();
-	}
-}
-
+Quaternion wand_orientation = Quaternion(Vec3f(1,0,0), osgDegree2Rad(30));
+Vec3f wand_position = Vec3f(0.f, 170.f, 160.f);
 
 /*
 * By Tobias Weiher
@@ -186,21 +103,33 @@ Quaternion moveObjectWithWandRotateOnly()
 	return virtualWandRot;
 }
 
-void moveObjectWithWand(NodeTransitPtr componentTransformNode)
+void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tracker)
 {
-	if (!componentTransformNode->getCore()->getType().isDerivedFrom(ComponentTransform::getClassType()))
+	wand_orientation = Quaternion(tracker.quat[0], tracker.quat[1], tracker.quat[2], tracker.quat[3]);
+	wand_position = Vec3f(scale_tracker2cm(Vec3d(tracker.pos)));
+	if(game != nullptr)
 	{
-		std::cout << "No ComponentTransformCore found!" << std::endl;
-		return;
+		game->UpdateWand(moveObjectWithWandTranslateOnly(), moveObjectWithWandRotateOnly());
 	}
+}
 
-	ComponentTransformRecPtr trans = dynamic_cast<ComponentTransform*>(componentTransformNode->getCore());
+auto analog_values = Vec3f();
+void VRPN_CALLBACK callback_analog(void* userData, const vrpn_ANALOGCB analog)
+{
+	if (analog.num_channel >= 2)
+		analog_values = Vec3f(analog.channel[0], 0, -analog.channel[1]);
+}
+void VRPN_CALLBACK callback_button(void* userData, const vrpn_BUTTONCB button)
+{
+	//if (button.button == 0 && button.state == 1)
+	//	print_tracker();
 
-	Vec3f virtualWandTrans = moveObjectWithWandTranslateOnly();
-	Quaternion virtualWandRot = moveObjectWithWandRotateOnly();
+	if (button.button == 0 && button.state == 1)
+	{
+		game->GetGun()->Shoot();
 
-	trans->setTranslation(virtualWandTrans);
-	trans->setRotation(virtualWandRot);
+		glutPostRedisplay();
+	}
 }
 
 void InitTracker(OSGCSM::CAVEConfig &cfg)
@@ -243,30 +172,36 @@ void print_tracker()
 	std::cout << "Analog: " << analog_values << '\n';
 }
 
-Vec2f mouse_last;
 float speed = 1;
+Vec2f currentMouseVec;
 void mouseMove(int x, int y)
 {
-	Vec2f currentMouseVec = Vec2f(x, y);
-	Vec2f mouseMove = mouse_last - currentMouseVec;
-	std::cout << "Mouse Move: (" << mouseMove.x() << "," << mouseMove.y() << ")\n";
-	NodeRefPtr root = mgr->getRoot();
-	if(root != nullptr)
+	//Vec2f screenCenter = Vec2f(glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
+	currentMouseVec = Vec2f(x, y);
+	/*
+	Vec2f mouseMove = currentMouseVec - screenCenter;
+	glutWarpPointer(screenCenter.x(), screenCenter.y());
+	//std::cout << "Mouse Move: (" << mouseMove.x() << "," << mouseMove.y() << ") Center: ( "<< screenCenter << ")" << std::endl;;
+	Vec3f wandRotation;
+	wand_orientation.getEulerAngleRad(wandRotation);
+	if(game != nullptr)
 	{
-		Vec3f* eulerAngles;
-		head_orientation.getEulerAngleDeg(*eulerAngles);
-		std::cout << "Euler Angles " << eulerAngles << std::endl;
-		head_orientation.setValueAsAxisDeg(Vec3f(1,0,0) ,eulerAngles->x() + mouseMove.x() * speed);
-		head_orientation.setValueAsAxisDeg(Vec3f(0,1,0) ,eulerAngles->y() + mouseMove.y() * speed);
+		wand_orientation.setValue(wandRotation.x() + osgDegree2Rad(-mouseMove.y()), wandRotation.y() + osgDegree2Rad(-mouseMove.x()), 0);
+		game->UpdateWand(wand_position, wand_orientation);
 
-		mouse_last = Vec2f(currentMouseVec);
-		commitChanges();
+		//commitChanges();
 		mgr->redraw();
+		glutPostRedisplay();
 	}
+	*/
 }
 
 void mouse(int button, int state, int x, int y)
 {
+	if(button == 0 && state == 1)
+	{
+		game->GetGun()->Shoot();
+	}
 	if(button == 3)
 	{
 		game->Scroll(1);
@@ -275,13 +210,13 @@ void mouse(int button, int state, int x, int y)
 	{
 		game->Scroll(-1);	
 	}
-	std::cout << "speed: " << speed << std::endl;
 }
 
 void keyboard(unsigned char k, int x, int y)
 {
 	Real32 ed;
 	Vec3f wandRotation;
+	wand_orientation.getEulerAngleRad(wandRotation);
 	switch(k)
 	{
 		case 'q':
@@ -290,15 +225,43 @@ void keyboard(unsigned char k, int x, int y)
 			//exit(EXIT_SUCCESS);
 			break;
 		case 'w':
-			wand_orientation.getEulerAngleDeg(wandRotation);
-			wand_orientation.setValueAsAxisDeg(Vec3f(1, 0, 0), wandRotation.x() + 1);
-			game->UpdateWand(wand_position, wand_orientation);
-			print_tracker();
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, 1, 0));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
 			break;
 		case 's':
-			wand_orientation.getEulerAngleDeg(wandRotation);
-			wand_orientation.setValueAsAxisDeg(Vec3f(1, 0, 0), wandRotation.x() - 1);
-			game->UpdateWand(wand_position, wand_orientation);
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, -1, 0));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
+			break;
+		case 'd':
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(1, 0, 0));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
+			break;
+		case 'a':
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(-1, 0, 0));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
+			break;
+		case 'y':
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, 0, 1));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
+			break;
+		case 'x':
+			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, 0, -1));
+			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
+			break;
+		case 'W':
+			wand_position.setValues(wand_position.x(), wand_position.y(), wand_position.z() - 1);
+			print_tracker();
+			break;
+		case 'S':
+			wand_position.setValues(wand_position.x(), wand_position.y(), wand_position.z() + 1);
+			print_tracker();
+			break;
+		case 'A':
+			wand_position.setValues(wand_position.x() + 1, wand_position.y(), wand_position.z());
+			print_tracker();
+		break;
+		case 'D':
+			wand_position.setValues(wand_position.x() - 1, wand_position.y(), wand_position.z());
 			print_tracker();
 			break;
 		case 'e':
@@ -327,13 +290,14 @@ void keyboard(unsigned char k, int x, int y)
 		default:
 			std::cout << "Key '" << k << "' ignored\n";
 	}
+	game->UpdateWand(wand_position, wand_orientation);
 }
 
 void limitFPS(int) {
     glutPostRedisplay();
-    glutTimerFunc(1000/60, limitFPS, 0);
+    glutTimerFunc(1000.f/60.f, limitFPS, 0);
 }
-
+int windowFocusState;
 void setupGLUT(int *argc, char *argv[])
 {
 	glutInit(argc, argv);
@@ -341,11 +305,24 @@ void setupGLUT(int *argc, char *argv[])
 	glutCreateWindow("OpenSG CSMDemo with VRPN API");
 	glutDisplayFunc([]()
 	{
-                MyTime::UpdateDeltaTime();
+		MyTime::UpdateDeltaTime();
+
+		if (windowFocusState == GLUT_ENTERED)
+		{
+			Vec2f screenCenter = Vec2f(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
+			Vec2f mouseMove = currentMouseVec - screenCenter;
+			glutWarpPointer(screenCenter.x(), screenCenter.y());
+			//std::cout << "Mouse Move: (" << mouseMove.x() << "," << mouseMove.y() << ") Center: ( "<< screenCenter << ")" << std::endl;;
+			Vec3f wandRotation;
+			wand_orientation.getEulerAngleRad(wandRotation);
+			wand_orientation.setValue(wandRotation.x() + osgDegree2Rad(-mouseMove.y()), wandRotation.y() + osgDegree2Rad(-mouseMove.x()), 0);
+			game->UpdateWand(wand_position, wand_orientation);
+		}
 		game->Update();
 		// black navigation window
 		glClear(GL_COLOR_BUFFER_BIT);
 		glutSwapBuffers();
+		//glutPostRedisplay();
 	});
 	glutReshapeFunc([](int w, int h)
 	{
@@ -353,8 +330,12 @@ void setupGLUT(int *argc, char *argv[])
 		glutPostRedisplay();
 	});
 	glutKeyboardFunc(keyboard);
-	//glutPassiveMotionFunc(mouseMove);
+	glutPassiveMotionFunc(mouseMove);
 	glutMouseFunc(mouse);
+	glutEntryFunc([](int state)
+	{
+		windowFocusState = state;
+	});
 	glutIdleFunc([]()
 	{
 		check_tracker();
@@ -469,6 +450,8 @@ int main(int argc, char **argv)
 		mgr->showAll();
 		mgr->getWindow()->init();
 		mgr->turnWandOff();
+
+		game->UpdateWand(moveObjectWithWandTranslateOnly(), moveObjectWithWandRotateOnly());
 	}
 	catch(const std::exception& e)
 	{

@@ -16,13 +16,13 @@ SubImageInfo::SubImageInfo(std::string Name, bool MirrorHorizontal, bool MirrorV
 SpriteAtlas::SpriteAtlas(std::string name)
 {
 	m_Name = name;
-	ImageRecPtr image = Image::create();
+	OSG::ImageRecPtr image = OSG::Image::create();
 	image->read(("sprites/" + m_Name + "/spritesheet.png").c_str());
 	m_SpriteMap["full"] = image;
 	std::cout << "full image=" << image->getWidth() << "x" << image->getHeight() << std::endl;
 	for (auto element : LoadSubImageInfo(m_Name))
 	{
-		ImageRecPtr subImage = Image::create();
+		OSG::ImageRecPtr subImage = OSG::Image::create();
 		image->subImage(element.OffsetX, image->getHeight() - element.OffsetY - element.Height, 0, element.Width, element.Height, image->getDepth(), subImage);
 		subImage->mirror(element.MirrorHorizontal, element.MirrorVertical, false, subImage);
 		m_SpriteMap[element.Name] = subImage;
@@ -30,15 +30,15 @@ SpriteAtlas::SpriteAtlas(std::string name)
 	m_SpriteListMap = LoadSpriteList(name);
 }
 
-ImageTransitPtr SpriteAtlas::GetImage(std::string name)
+OSG::ImageTransitPtr SpriteAtlas::GetImage(std::string name)
 {
 	const auto iter = m_SpriteMap.find(name);
 	if (iter != m_SpriteMap.end())
 	{
-		return ImageTransitPtr(iter->second);
+		return OSG::ImageTransitPtr(iter->second);
 	}
 
-	return ImageTransitPtr(nullptr);
+	return OSG::ImageTransitPtr(nullptr);
 }
 
 std::unordered_map<std::string, std::vector<std::string>> SpriteAtlas::GetSpriteList(std::string name)

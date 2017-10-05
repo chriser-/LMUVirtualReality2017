@@ -6,4 +6,10 @@
 	<sprite name="Ground">
 		<item key="ground" frame="1">ground</item>
 	</sprite>
+	<sprite name="Crosshair">
+		<item key="crosshair" frame="1">crosshair</item>
+	</sprite>
+	<sprite name="Grass">
+		<item key="grass" frame="1">grass</item>
+	</sprite>
 </spritelist>

@@ -7,6 +7,9 @@
 #include <OSGNameAttachment.h>
 #include <inVRs/SystemCore/UserDatabase/UserDatabase.h>
 #include <mutex>
+#include "Mesh.h"
+#include <GL/glut.h>
+#include <OSGDirectionalLight.h>
 
 
 OSG_USING_STD_NAMESPACE
@@ -34,16 +37,19 @@ void Game::RemoveBehavior(GameObject* behavior)
 	const NodeRecPtr nodeToDelete = behavior->GetTransform().node();
 	if (behavior->GetName() == "Bird")
 	{
+		m_birdsAlive--;
 		m_root.node()->getChild(0)->subChild(nodeToDelete);
-		std::cout << "Removed Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ") from graph" << std::endl;
 	}
 	else
 	{
 		m_root.node()->subChild(nodeToDelete);
 	}
 	m_behaviorsToDelete.insert(behavior->GetTransform().node());
-	std::cout << "Removed Behavior " << behavior->GetName() << " (" << GameObject::hash_value(*behavior) << ") from map" << std::endl;
+}
 
+Gun* Game::GetGun()
+{
+	return m_gun;
 }
 
 GameObject* Game::GetBehavior(NodeRecPtr fromNode)
@@ -68,41 +74,69 @@ SpriteAtlas* Game::GetSpriteAtlas(std::string spriteAtlasName)
 	return atlas;
 }
 
+GameObject* makeEnv(Vec3f position, Vec3f rotation, Vec3f scale, int sortIndex, std::string name)
+{
+	GameObject* obj = new GameObject(name);
+	obj->GetTransform()->setTranslation(position);
+	Quaternion rot;
+	rot.setValue(osgDegree2Rad(rotation.x()), osgDegree2Rad(rotation.y()), osgDegree2Rad(rotation.z()));
+	obj->GetTransform()->setRotation(rot);
+	obj->GetTransform()->setScale(scale);
+	Sprite* objSprite = new Sprite(obj->GetTransform().node(), name, "objects", sortIndex);
+	obj->AddComponent(objSprite);
+	Vec2f dimensions = objSprite->GetDimensions();
+	obj->Translate(Vec3f(0, scale.y() * (dimensions.y() / 2), 0));
+	return obj;
+}
+
+GameObject* makeTree(Vec3f position, Vec3f rotation, int sortIndex)
+{
+	return makeEnv(position, rotation, Vec3f(0.5, 0.5, 0.5), sortIndex, "Tree");
+}
+
+GameObject* makeGrass(Vec3f position, Vec3f rotation, int sortIndex)
+{
+	return makeEnv(position, rotation, Vec3f(0.25, 0.25, 0.25), sortIndex, "Grass");
+}
+
+GameObject* makeBird(std::string name, int speed)
+{
+	Vec3f pos = Vec3f((rand() % 400) - 200, 20, -100);
+	Bird* bird = new Bird("Bird", name);
+	bird->SetSpeed(speed);
+	bird->Translate(pos);
+	return bird;
+}
+
 Game* Game::m_gameInstance;
+GameObject* m_goToModify = nullptr;
 Game::Game()
 {
 	m_gameInstance = this;
 	m_root = GroupNodeRefPtr::create();
 	m_root.node()->addChild(GroupNodeRefPtr::create()); // bird root (hack for collision)
 	setName(m_root.node(), "Root");
-	struct BirdPosInfo
-	{
-		std::string Name;
-		std::string SpriteName;
-		Vec3f Position;
-	};
-	BirdPosInfo birds[] = {
-		{"Bird", "DuckBlue", Vec3f(10, 100, -100)},
-		{"Bird", "DuckBlue", Vec3f(20, 100, -100)},
-		{ "Bird", "DuckBlue", Vec3f(30, 100, -100) },
-		{ "Bird", "DuckBlue", Vec3f(40, 100, -100) },
-		{ "Bird", "DuckBlue", Vec3f(50, 100, -100) },
-		{ "Bird", "DuckBlue", Vec3f(60, 100, -100) },
-		{"Bird", "DuckBlue", Vec3f(70, 100, -100)},
-	};
-	for (auto bird : birds)
-	{
-		//std::cout << "Creating " << bird.Name << std::endl;
-		Bird* b = new Bird(bird.Name, bird.SpriteName);
-		b->GetTransform()->setTranslation(bird.Position);
-		b->SetSpeed(30);
-	}
 
 	// floor
 	GameObject* floor = new GameObject("Floor");
-	GeometryNodeRefPtr floorGeo = GeometryNodeRefPtr::create();
-	floorGeo.node()->setCore(makePlaneGeo(5000, 5000, 1, 1));
-	floor->GetTransform().node()->addChild(floorGeo);
+	m_goToModify = floor;
+	GeometryRecPtr floorGeo = makePlaneGeo(50000, 50000, 1000, 1000);
+	TextureObjChunkRecPtr tex = TextureObjChunk::create();
+	tex->setImage(GetSpriteAtlas("objects")->GetImage("ground").get());
+	tex->setWrapS(GL_REPEAT);
+	tex->setWrapT(GL_REPEAT);
+	TextureEnvChunkRefPtr texEnv = TextureEnvChunk::create();
+	texEnv->setEnvMode(GL_MODULATE);
+	ChunkMaterialRecPtr mat = ChunkMaterial::create();
+	mat->addChunk(tex);
+	mat->addChunk(texEnv);
+
+	//SimpleTexturedMaterialRecPtr floorMat = SimpleTexturedMaterial::create();
+	//floorMat->setImage(GetSpriteAtlas("objects")->GetImage("ground").get());
+	floorGeo->setMaterial(mat);
+	NodeRecPtr floorNode = Node::create();
+	floorNode->setCore(floorGeo);
+	floor->GetTransform().node()->addChild(floorNode);
 	floor->GetTransform()->setRotation(Quaternion(Vec3f(1, 0, 0), osgDegree2Rad(90)));
 
 	// skybox
@@ -120,42 +154,71 @@ Game::Game()
 	m_skybox.setupRender(camera->getPosition());
 
 	// trees
-	GameObject* tree = new GameObject("Tree");
-	tree->GetTransform()->setTranslation(Vec3f(0, 0, -99));
-	tree->GetTransform()->setScale(Vec3f(0.5, 0.5, 0.5));
-	Sprite* treeSprite = new Sprite(tree->GetTransform().node(), "Tree", "objects");
-	tree->AddComponent(treeSprite);
-	Vec2f dimensions = treeSprite->GetDimensions();
-	tree->Translate(Vec3f(0, dimensions.y()/2, 0));
+	// front row
+	makeTree(Vec3f(-40, 0, -100), Vec3f(0, 0, 0), 1);
+	makeTree(Vec3f(200, 0, -56), Vec3f(0, -30, 0), 1);
+	
+	// back row
+	makeTree(Vec3f(-258, 0, -184), Vec3f(0, 30, 0), -2);
+	makeTree(Vec3f(164, 0, -242), Vec3f(0, -30, 0), -2);
 
 	// grass
-	GameObject* grass = new GameObject("Grass");
-	grass->GetTransform()->setTranslation(Vec3f(0, 0, -101));
-	grass->GetTransform()->setScale(Vec3f(0.25, 0.25, 0.25));
-	Sprite* grassSprite = new Sprite(grass->GetTransform().node(), "Ground", "objects");
-	grass->AddComponent(grassSprite);
-	dimensions = grassSprite->GetDimensions();
-	grass->Translate(Vec3f(0, dimensions.y() / 2, 0));
+	// front row
+	makeGrass(Vec3f(-210, 0, -44), Vec3f(0, 30, 0), 2);
+	makeGrass(Vec3f(0, 0, -100), Vec3f(0, 0, 0), 2);
+	makeGrass(Vec3f(210, 0, -44), Vec3f(0, -30, 0), 2);
 
-	
-	// debug wand display
-	m_debugWand = ComponentTransformNodeRefPtr::create();
-	ComponentTransformNodeRefPtr wandChild = ComponentTransformNodeRefPtr::create();
-	wandChild->setRotation(Quaternion(Vec3f(1, 0, 0), osgDegree2Rad(-90)));
-	GeometryNodeRefPtr wandGeo = GeometryNodeRefPtr::create();
-	wandGeo.node()->setCore(makeCylinderGeo(500, 2, 100, true, true, true).get());
-	wandChild.node()->addChild(wandGeo);
-	m_debugWand.node()->addChild(wandChild);
-	m_root.node()->addChild(m_debugWand);
-	
+	// back row
+	makeGrass(Vec3f(-210, 0, -214), Vec3f(0, 30, 0), -1);
+	makeGrass(Vec3f(0, 0, -270), Vec3f(0, 0, 0), -1);
+	makeGrass(Vec3f(210, 0, -214), Vec3f(0, -30, 0), -1);
+
+	// gun
+	m_gun = new Gun();
+
+	// light
+	DirectionalLightNodeRefPtr light = DirectionalLightNodeRefPtr::create();
+	light->setOn(true);
+	light->setDirection(0, -1, 0);
+	m_root.node()->addChild(light);
+
+	// open scene TODO
+	m_birdsAlive = 0;
+	m_currentWave = 0;
+	m_gameReady = true;
 }
 
 void Game::Update()
 {
+	// main loop
+	if(m_gameReady)
+	{
+		if(m_birdsAlive <= 0)
+		{
+			m_currentWave++;
+			m_birdsAlive = 1 + m_currentWave * 2;
+			m_gun->SetRemainingShots(m_birdsAlive + 3); // 3 more shots than birds alive
+			for (int i = 0; i < m_birdsAlive; ++i)
+			{
+				std::string duckName = "DuckBlue";
+				int random = rand() % 100;
+				if(random < 33)
+				{
+					duckName = "DuckRed";
+				}
+				else if(random < 66)
+				{
+					duckName = "DuckBlack";
+				}
+				makeBird(duckName, 20 + (10 * m_currentWave));
+			}
+		}
+	}
+
 	// Update all behaviors
 	for (auto& behavior : m_behaviors)
 	{
-		std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
+		//std::cout << "Updating first " << behavior.first << " second " << behavior.second << std::endl;
 		behavior.second->Update();
 	}
 	for(auto& behaviorToDelete : m_behaviorsToDelete)
@@ -167,8 +230,8 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	m_debugWand->setTranslation(Vec3f(position.x(), position.y(), position.z()));
-	m_debugWand->setRotation(orientation);
+	m_gun->GetTransform()->setTranslation(Vec3f(position.x(), position.y(), position.z()));
+	m_gun->GetTransform()->setRotation(orientation);
 }
 
 Game::~Game()
@@ -187,7 +250,23 @@ Game::~Game()
 
 void Game::Scroll(int direction) const
 {
-	
+	if (m_goToModify != nullptr) 
+	{
+
+		if (glutGetModifiers() & GLUT_ACTIVE_SHIFT)
+		{
+			m_goToModify->Translate(Vec3f(0, 0, direction));
+		}
+		else if (glutGetModifiers() & GLUT_ACTIVE_CTRL)
+		{
+			m_goToModify->Translate(Vec3f(0, direction, 0));
+		}
+		else
+		{
+			m_goToModify->Translate(Vec3f(direction, 0, 0));
+		}
+		std::cout << m_goToModify->GetTransform()->getTranslation() << std::endl;
+	}
 }
 
 NodeTransitPtr Game::GetRootNode() const

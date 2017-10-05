@@ -32,17 +32,24 @@ ComponentTransformNodeRefPtr makeBird()
 	return birdTransform;
 }
 
-const int Bird::START_VELOCITY_COUNT = 2;
+const int Bird::START_VELOCITY_COUNT = 3;
 const Vec3f Bird::START_VELOCITIES[START_VELOCITY_COUNT] = {
 	Vec3f(1,1,0),
-	Vec3f(-1,1,0)
+	Vec3f(-1,1,0),
+	Vec3f(0,1,0)
 };
+//									  y  x
 const string Bird::VELOCITY_TO_SPRITE[3][3] = {
 	//-1			0			1
-	{ "left",	"left",	"left_up"},	// -1
-	{ "left",		"",		"right"},		// 0
-	{ "right",	"right","right_up"}		// 1
+	{ "left_up",	"up",	"right_up"	},		// 1
+	{ "left",		"",		"right"		},		// 0
+	{ "left",		"",		"right"		},		// -1
 };
+
+float getNextDirectionTimer()
+{
+	return 2.f + ((rand() % 40) / 10.f); // 2 + (0..4) seconds
+}
 
 Bird::Bird(std::string name, std::string spriteName) : GameObject(name)
 {
@@ -50,10 +57,20 @@ Bird::Bird(std::string name, std::string spriteName) : GameObject(name)
 	m_direction = START_VELOCITIES[rand() % START_VELOCITY_COUNT];
 	m_speed = 1;
 	m_hitSpriteTimer = 0.5f;
+	m_nextDirectionTimer = getNextDirectionTimer();
 	m_hit = m_dead = false;
 	m_BirdSprite = new Sprite(GetTransform().node(), spriteName, "units");
 	m_BirdSprite->SetTimePerFrame(0.05);
 	AddComponent(m_BirdSprite);
+	UpdateDirectionSprite();
+}
+
+void Bird::UpdateDirectionSprite() const
+{
+	// update sprite to match direction
+	std::string newSprite = VELOCITY_TO_SPRITE[abs(int(m_direction.y()) - 1)][abs(int(m_direction.x()) + 1)];
+	//std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
+	m_BirdSprite->UpdateCurrentSprite(newSprite);
 }
 
 void Bird::Update()
@@ -76,7 +93,13 @@ void Bird::Update()
 			// keep position in bounds
 			float newXDirection, newYDirection, newZDirection;
 			m_direction.getSeparateValues(newXDirection, newYDirection, newZDirection);
-			
+			// change direction after certain time
+			m_nextDirectionTimer -= MyTime::DeltaTime * (m_speed / 30.f);
+			if(m_nextDirectionTimer <= 0)
+			{
+				newXDirection = (rand() % 3) - 1;
+				newYDirection = (rand() % 3) - 1;
+			}
 			if (xPosition > 200)
 			{
 				newXDirection = -1;
@@ -93,13 +116,18 @@ void Bird::Update()
 			{
 				newYDirection = 1;
 			}
-			//std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
-			m_direction.setValues(newXDirection, newYDirection, newZDirection);
 
-			// update sprite to match velocity
-			std::string newSprite = VELOCITY_TO_SPRITE[int(newXDirection) + 1][int(newYDirection) + 1];
-			//std::cout << "New Sprite is " << newSprite << "[" << int(newXDirection) + 1 << "][" << int(newYDirection) + 1 << "]" << std::endl;
-			m_BirdSprite->UpdateCurrentSprite(newSprite);
+			if (newXDirection == 0 && (newYDirection == 0 || newYDirection == -1)) // center or down are not existing
+				newXDirection = 1; // fallback: move to right
+
+			if (m_direction.x() != newXDirection || m_direction.y() != newYDirection)
+			{
+				m_nextDirectionTimer = getNextDirectionTimer();
+
+				//std::cout << "New Direction is (" << newXDirection << "," << newYDirection << ") at speed " << m_speed << std::endl;
+				m_direction.setValues(newXDirection, newYDirection, newZDirection);
+				UpdateDirectionSprite();
+			}
 		}
 		else
 		{

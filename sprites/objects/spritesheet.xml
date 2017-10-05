@@ -1,4 +1,6 @@
 <textureatlas imagepath="spritesheet.png">
-	<subtexture name="tree" x="0" y="183" width="173" height="260"  MirrorVertical="false" MirrorHorizontal="false" />
-	<subtexture name="ground" x="0" y="0" width="900" height="182"  MirrorVertical="false" MirrorHorizontal="false" />
+	<subtexture name="grass" x="0" y="0" width="900" height="123" MirrorVertical="false" MirrorHorizontal="false"/>
+	<subtexture name="tree" x="0" y="183" width="173" height="242" MirrorVertical="false" MirrorHorizontal="false" />
+	<subtexture name="ground" x="284" y="185" width="50" height="50" MirrorVertical="false" MirrorHorizontal="false" />
+	<subtexture name="crosshair" x="174" y="183" width="64" height="64" MirrorVertical="false" MirrorHorizontal="false"/>
 </textureatlas>

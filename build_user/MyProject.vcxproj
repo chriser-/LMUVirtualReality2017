@@ -120,6 +120,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\sources\GameObject.h" />
     <ClInclude Include="..\sources\bird.h" />
     <ClInclude Include="..\sources\Game.h" />
+    <ClInclude Include="..\sources\Gun.h" />
+    <ClInclude Include="..\sources\Mesh.h" />
     <ClInclude Include="..\sources\Sprite.h" />
     <ClInclude Include="..\sources\SpriteAtlas.h" />
     <ClInclude Include="..\sources\Time.h" />
@@ -128,6 +130,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\sources\GameObject.cpp" />
     <ClCompile Include="..\sources\bird.cpp" />
     <ClCompile Include="..\sources\Game.cpp" />
+    <ClCompile Include="..\sources\Gun.cpp" />
+    <ClCompile Include="..\sources\Mesh.cpp" />
     <ClCompile Include="..\sources\Sprite.cpp" />
     <ClCompile Include="..\sources\SpriteAtlas.cpp" />
     <ClCompile Include="..\sources\Time.cpp" />
