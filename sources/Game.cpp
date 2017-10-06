@@ -122,7 +122,6 @@ Game::Game()
 
 	// floor
 	GameObject* floor = new GameObject("Floor");
-	m_goToModify = floor;
 	GeometryRecPtr floorGeo = makePlaneGeo(50000, 50000, 1000, 1000);
 	TextureObjChunkRecPtr tex = TextureObjChunk::create();
 	tex->setImage(GetSpriteAtlas("objects")->GetImage("ground").get());
@@ -178,6 +177,7 @@ Game::Game()
 
 	// gun
 	m_gun = new Gun();
+	m_goToModify = m_gun;
 
 	// light
 	DirectionalLightNodeRefPtr light = DirectionalLightNodeRefPtr::create();
@@ -256,18 +256,18 @@ void Game::Scroll(int direction) const
 	if (m_goToModify != nullptr) 
 	{
 
-		if (glutGetModifiers() & GLUT_ACTIVE_SHIFT)
-		{
-			m_goToModify->Translate(Vec3f(0, 0, direction));
-		}
-		else if (glutGetModifiers() & GLUT_ACTIVE_CTRL)
-		{
+		//if (glutGetModifiers() & GLUT_ACTIVE_SHIFT)
+		//{
+		//	m_goToModify->Translate(Vec3f(0, 0, direction));
+		//}
+		//else if (glutGetModifiers() & GLUT_ACTIVE_CTRL)
+		//{
+		//	m_goToModify->Translate(Vec3f(direction, 0, 0));
+		//}
+		//else
+		//{
 			m_goToModify->Translate(Vec3f(0, direction, 0));
-		}
-		else
-		{
-			m_goToModify->Translate(Vec3f(direction, 0, 0));
-		}
+		//}
 		std::cout << m_goToModify->GetTransform()->getTranslation() << std::endl;
 	}
 }

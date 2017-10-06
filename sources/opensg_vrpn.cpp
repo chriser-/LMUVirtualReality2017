@@ -113,7 +113,7 @@ void VRPN_CALLBACK callback_wand_tracker(void* userData, const vrpn_TRACKERCB tr
 	}
 }
 
-auto analog_values = Vec3f();
+auto analog_values = Vec3f(0,0,0);
 void VRPN_CALLBACK callback_analog(void* userData, const vrpn_ANALOGCB analog)
 {
 	if (analog.num_channel >= 2)
@@ -306,7 +306,7 @@ void setupGLUT(int *argc, char *argv[])
 	glutDisplayFunc([]()
 	{
 		MyTime::UpdateDeltaTime();
-
+		
 		if (windowFocusState == GLUT_ENTERED)
 		{
 			Vec2f screenCenter = Vec2f(glutGet(GLUT_WINDOW_WIDTH) / 2, glutGet(GLUT_WINDOW_HEIGHT) / 2);
@@ -317,6 +317,14 @@ void setupGLUT(int *argc, char *argv[])
 			wand_orientation.getEulerAngleRad(wandRotation);
 			wand_orientation.setValue(wandRotation.x() + osgDegree2Rad(-mouseMove.y()), wandRotation.y() + osgDegree2Rad(-mouseMove.x()), 0);
 			game->UpdateWand(wand_position, wand_orientation);
+		}
+		if(analog_values.z() > 0.5f)
+		{
+			game->Scroll(1);
+		}
+		else if(analog_values.z() < 0.5f)
+		{
+			game->Scroll(-1);
 		}
 		game->Update();
 		// black navigation window
@@ -340,6 +348,7 @@ void setupGLUT(int *argc, char *argv[])
 	{
 		check_tracker();
 		commitChanges();
+		
 		mgr->setUserTransform(head_position, head_orientation);
 		mgr->redraw();
 		// the changelist should be cleared - else things could be copied multiple times
