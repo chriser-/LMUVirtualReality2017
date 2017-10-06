@@ -232,7 +232,7 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	m_gun->GetTransform()->setTranslation(Vec3f(position.x()/5.f, position.y()/5.f+50.f, position.z()/5.f+1000));
+	m_gun->GetTransform()->setTranslation(Vec3f(position.x(), position.y()+50.f, position.z()+1000));
 	m_gun->GetTransform()->setRotation(orientation);
 }
 
