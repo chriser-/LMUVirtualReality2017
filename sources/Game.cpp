@@ -81,12 +81,11 @@ GameObject* makeEnv(Vec3f position, Vec3f rotation, Vec3f scale, int sortIndex, 
 	Quaternion rot;
 	rot.setValue(osgDegree2Rad(rotation.x()), osgDegree2Rad(rotation.y()), osgDegree2Rad(rotation.z()));
 	obj->GetTransform()->setRotation(rot);
-	scale *= 5;
 	obj->GetTransform()->setScale(scale);
 	Sprite* objSprite = new Sprite(obj->GetTransform().node(), name, "objects", sortIndex);
 	obj->AddComponent(objSprite);
 	Vec2f dimensions = objSprite->GetDimensions();
-	obj->Translate(Vec3f(0, scale.y() * (dimensions.y() / 2), -1000));
+	obj->Translate(Vec3f(0, scale.y() * (dimensions.y() / 2), 0));
 	return obj;
 }
 
@@ -115,8 +114,8 @@ Game::Game()
 {
 	m_gameInstance = this;
 	m_root = ComponentTransformNodeRefPtr::create();
-	//m_root->setScale(Vec3f(5,5,5));
-	//m_root->setTranslation(Vec3f(0, 0, -1000));
+	m_root->setScale(Vec3f(7,7,7));
+	m_root->setTranslation(Vec3f(0, 0, -1000));
 	m_root.node()->addChild(GroupNodeRefPtr::create()); // bird root (hack for collision)
 	setName(m_root.node(), "Root");
 
@@ -233,7 +232,7 @@ void Game::Update()
 
 void Game::UpdateWand(Vec3f position, Quaternion orientation) const
 {
-	m_gun->GetTransform()->setTranslation(Vec3f(position.x(), position.y(), position.z()));
+	m_gun->GetTransform()->setTranslation(Vec3f(position.x(), position.y()+50.f, position.z()));
 	m_gun->GetTransform()->setRotation(orientation);
 }
 

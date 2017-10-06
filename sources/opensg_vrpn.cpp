@@ -70,7 +70,7 @@ void VRPN_CALLBACK callback_head_tracker(void* userData, const vrpn_TRACKERCB tr
 }
 
 Quaternion wand_orientation = Quaternion(Vec3f(1,0,0), osgDegree2Rad(30));
-Vec3f wand_position = Vec3f(0.f, 170.f, 160.f);
+Vec3f wand_position = Vec3f(0.f, 130.f, 160.f);
 
 /*
 * By Tobias Weiher
@@ -217,6 +217,7 @@ void keyboard(unsigned char k, int x, int y)
 	Real32 ed;
 	Vec3f wandRotation;
 	wand_orientation.getEulerAngleRad(wandRotation);
+	Vec3f newHeadPos = Vec3f(head_position);
 	switch(k)
 	{
 		case 'q':
@@ -224,6 +225,7 @@ void keyboard(unsigned char k, int x, int y)
 			cleanup();
 			//exit(EXIT_SUCCESS);
 			break;
+		/*
 		case 'w':
 			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, 1, 0));
 			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
@@ -248,6 +250,7 @@ void keyboard(unsigned char k, int x, int y)
 			game->GetGun()->GetBarrelExitGameObject()->Translate(Vec3f(0, 0, -1));
 			std::cout << game->GetGun()->GetBarrelExitGameObject()->GetTransform()->getTranslation() << std::endl;
 			break;
+		*/
 		case 'W':
 			wand_position.setValues(wand_position.x(), wand_position.y(), wand_position.z() - 1);
 			print_tracker();
@@ -317,14 +320,6 @@ void setupGLUT(int *argc, char *argv[])
 			wand_orientation.getEulerAngleRad(wandRotation);
 			wand_orientation.setValue(wandRotation.x() + osgDegree2Rad(-mouseMove.y()), wandRotation.y() + osgDegree2Rad(-mouseMove.x()), 0);
 			game->UpdateWand(wand_position, wand_orientation);
-		}
-		if(analog_values.z() > 0.5f)
-		{
-			game->Scroll(1);
-		}
-		else if(analog_values.z() < 0.5f)
-		{
-			game->Scroll(-1);
 		}
 		game->Update();
 		// black navigation window
