@@ -113,7 +113,9 @@ GameObject* m_goToModify = nullptr;
 Game::Game()
 {
 	m_gameInstance = this;
-	m_root = GroupNodeRefPtr::create();
+	m_root = ComponentTransformNodeRefPtr::create();
+	m_root->setScale(Vec3f(10,10,10));
+	m_root->setTranslation(Vec3f(0, 0, -1000));
 	m_root.node()->addChild(GroupNodeRefPtr::create()); // bird root (hack for collision)
 	setName(m_root.node(), "Root");
 

@@ -13,7 +13,7 @@ private:
 	boost::unordered_map<OSG::Node*, GameObject*> m_behaviors;
 	boost::unordered_set<OSG::Node*> m_behaviorsToDelete;
 	std::unordered_map<std::string, SpriteAtlas*> m_SpriteAtlasses;
-	OSG::GroupNodeRefPtr m_root;
+	OSG::ComponentTransformNodeRefPtr m_root;
 	Skybox m_skybox;
 	Gun* m_gun;
 	int m_currentWave;
