@@ -204,11 +204,11 @@ void Game::Update()
 			{
 				std::string duckName = "DuckBlue";
 				int random = rand() % 100;
-				if(random < 33)
+				if(random < 10)
 				{
 					duckName = "DuckRed";
 				}
-				else if(random < 66)
+				else if(random < 2)
 				{
 					duckName = "DuckBlack";
 				}
